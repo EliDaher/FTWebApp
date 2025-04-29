@@ -7,19 +7,19 @@ export default function Navbar() {
         <h1 className="text-2xl font-extrabold tracking-wide text-white">Fitness WebApp</h1>
         <nav className="space-x-6">
           <Link 
-            to="/Home" 
+            to="Home" 
             className="text-gray-300 hover:text-white transition-colors duration-300 text-lg"
           >
             Home
           </Link>
           <Link 
-            to="/Exercise" 
+            to="Exercise" 
             className="text-gray-300 hover:text-white transition-colors duration-300 text-lg"
           >
             Exercise
           </Link>
           <Link 
-            to="/" 
+            to="" 
             className="text-gray-300 hover:text-white transition-colors duration-300 text-lg"
           >
             Log Out
