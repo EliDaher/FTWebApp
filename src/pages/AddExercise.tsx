@@ -148,6 +148,7 @@ export default function Exercise() {
                 <input
                     type="file"
                     accept="image/*"
+                    capture="environment"
                     onChange={(e) => { 
                         if (e.target.files && e.target.files.length > 0) {
                             setImageFile(e.target.files[0]);
