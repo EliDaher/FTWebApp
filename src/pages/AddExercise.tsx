@@ -145,7 +145,7 @@ export default function Exercise() {
           <FilePond
             files={imageFile ? [imageFile] : []}
             onupdatefiles={(fileItems) => {
-              const file = fileItems[0]?.file;
+              const file = fileItems[0]?.file as File;
               setImageFile(file || null);
             }}
             allowMultiple={false}
