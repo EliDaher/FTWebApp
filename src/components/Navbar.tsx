@@ -37,11 +37,25 @@ export default function Navbar() {
             Home
           </Link>
           <Link
+            to="UsersPage"
+            onClick={() => setIsOpen(false)}
+            className="text-gray-300 hover:text-white transition-colors duration-300 text-lg w-full md:w-auto"
+          >
+            Users
+          </Link>
+          <Link
             to="Exercises"
             onClick={() => setIsOpen(false)}
             className="text-gray-300 hover:text-white transition-colors duration-300 text-lg w-full md:w-auto"
           >
             Exercises
+          </Link>
+          <Link
+            to="WorkOuts"
+            onClick={() => setIsOpen(false)}
+            className="text-gray-300 hover:text-white transition-colors duration-300 text-lg w-full md:w-auto"
+          >
+            WorkOut
           </Link>
           <Link
             to=""
