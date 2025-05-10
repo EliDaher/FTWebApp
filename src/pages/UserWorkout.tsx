@@ -123,7 +123,7 @@ export default function UserWorkout() {
   }, []);
 
   if (loading) return <div className="text-center mt-4">تحميل...</div>;
-  if (error) return <div className="text-red-500">حدث خطأ! حاول مجددًا.</div>;
+  if (error) return <div className="text-red-500">لا يوجد تمارين حاليا</div>;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-gray-800 text-white flex flex-col px-3">
