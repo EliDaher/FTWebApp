@@ -1,8 +1,11 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useAuth } from "../context/AuthContext";
+
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const { userType } = useAuth()
 
   return (
     <header className="fixed top-0 left-0 w-full z-50 bg-gradient-to-bl from-black via-gray-950 to-gray-900 border-b border-white/10 shadow-md">
@@ -32,35 +35,42 @@ export default function Navbar() {
           <Link
             to="Home"
             onClick={() => setIsOpen(false)}
-            className="text-gray-300 hover:text-white transition-colors duration-300 text-lg w-full md:w-auto"
+            className={`text-gray-300 hover:text-white transition-colors duration-300 text-lg w-full md:w-auto`}
           >
-            Home
+            الصفحة الرئيسية
+          </Link>
+          <Link
+            to="UserWorkout"
+            onClick={() => setIsOpen(false)}
+            className={`text-gray-300 hover:text-white transition-colors duration-300 text-lg w-full md:w-auto`}
+          >
+            تمرين اليوم
           </Link>
           <Link
             to="UsersPage"
             onClick={() => setIsOpen(false)}
-            className="text-gray-300 hover:text-white transition-colors duration-300 text-lg w-full md:w-auto"
+            className={`${userType == `admin` ? `block` : `hidden`} text-gray-300 hover:text-white transition-colors duration-300 text-lg w-full md:w-auto`}
           >
             Users
           </Link>
           <Link
             to="Exercises"
             onClick={() => setIsOpen(false)}
-            className="text-gray-300 hover:text-white transition-colors duration-300 text-lg w-full md:w-auto"
+            className={`${userType == `admin` ? `block` : `hidden`} text-gray-300 hover:text-white transition-colors duration-300 text-lg w-full md:w-auto`}
           >
             Exercises
           </Link>
           <Link
             to="WorkOuts"
             onClick={() => setIsOpen(false)}
-            className="text-gray-300 hover:text-white transition-colors duration-300 text-lg w-full md:w-auto"
+            className={`${userType == `admin` ? `block` : `hidden`} text-gray-300 hover:text-white transition-colors duration-300 text-lg w-full md:w-auto`}
           >
             WorkOut
           </Link>
           <Link
             to=""
             onClick={() => setIsOpen(false)}
-            className="text-gray-300 hover:text-white transition-colors duration-300 text-lg w-full md:w-auto"
+            className={`${userType == `admin` ? `block` : `hidden`} text-gray-300 hover:text-white transition-colors duration-300 text-lg w-full md:w-auto`}
           >
             Log Out
           </Link>

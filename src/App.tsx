@@ -11,12 +11,15 @@ import WorkOutDetails from './components/WorkOutDetails';
 import EditWorkout from './components/EditWorkout';
 import UsersPage from './pages/UsersPage';
 import UserDetailsPage from './components/UserDetails';
+import SignUp from './pages/SignUp';
+import UserWorkout from './pages/UserWorkout';
 
 export default function App() {
   return (
     <HashRouter>
       <Routes>
         <Route path="/" element={<Login />} />
+        <Route path="/SignUP" element={<SignUp />} />
         <Route element={<MainLayout />}>
           <Route path="/Home" element={<Home />} />
           <Route path="/AddExercise" element={<AddExercise />} />
@@ -28,6 +31,7 @@ export default function App() {
           <Route path="/ExerciseDetails/:exerciseName" element={<ExerciseDetails />} />
           <Route path="/UsersPage" element={<UsersPage />} />
           <Route path="/user/:id" element={<UserDetailsPage />} />
+          <Route path="/UserWorkout" element={<UserWorkout />} />
         </Route>
       </Routes>
     </HashRouter>

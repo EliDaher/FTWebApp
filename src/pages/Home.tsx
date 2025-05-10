@@ -1,6 +1,10 @@
+import { useNavigate } from "react-router-dom";
 
 
 export default function Home() {
+
+  const navigate = useNavigate()
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-gray-800 text-white flex flex-col">
 
@@ -14,7 +18,9 @@ export default function Home() {
         </p>
         <div className="flex space-x-4">
           <a
-            href="#"
+            onClick={()=>{
+              navigate('/UserWorkout')
+            }}
             className="bg-white text-black px-6 py-3 rounded-full font-semibold hover:bg-gray-200 transition"
           >
             Get Started

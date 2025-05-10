@@ -6,8 +6,8 @@ import { Exercise } from '../types/exercise'
 
 
 type availableExercisesType = { 
-    id: string,
-    name: string
+  id: string,
+  name: string
 } 
 
 
