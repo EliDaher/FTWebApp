@@ -10,9 +10,9 @@ export default function Home() {
 
       {/* Hero Section */}
       <section className="flex-1 flex flex-col items-center justify-center text-center px-4">
-        <h1 className="text-4xl md:text-6xl font-extrabold mb-6 leading-tight">
+        {/*<h1 className="text-4xl md:text-6xl font-extrabold mb-6 leading-tight">
           FT
-        </h1>
+        </h1>*/}
         <h2 className="text-4xl md:text-6xl font-extrabold mb-6 leading-tight">
           Build Your Best Body
         </h2>

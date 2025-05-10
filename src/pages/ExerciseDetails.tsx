@@ -2,8 +2,12 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Exercise } from "../types/exercise";
+import { useAuth } from "../context/AuthContext";
 
 export default function ExerciseDetails() {
+
+  const { userType } = useAuth()
+
   const { exerciseName } = useParams();
   const navigate = useNavigate();
   const [originalData, setOriginalData] = useState<Exercise | null>(null);
@@ -27,6 +31,7 @@ export default function ExerciseDetails() {
 
   const handleChange = (field: keyof Exercise, value: string) => {
     if (!editedData) return;
+    if (userType != "admin") {return}
 
     const updated = { ...editedData, [field]: value };
     setEditedData(updated);
@@ -130,14 +135,14 @@ export default function ExerciseDetails() {
           {isModified && (
             <button
               onClick={handleSave}
-              className="mt-6 bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-md transition"
+              className={`${userType == `admin` ? `block` : `hidden`} mt-6 bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-md transition`}
             >
               حفظ التعديلات
             </button>
           )}
             <button
               onClick={handleDelete}
-              className="mt-6 mx-3 bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-md transition"
+              className={`${userType == `admin` ? `block` : `hidden`} mt-6 mx-3 bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-md transition`}
             >
               حزف التمرين
             </button>
