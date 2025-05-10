@@ -1,16 +1,21 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from "../context/AuthContext";
-
+import logo from '../assets/exerciseImages/icon.png'
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const { userType } = useAuth()
 
   return (
-    <header className="fixed top-0 left-0 w-full z-50 bg-gradient-to-bl from-black via-gray-950 to-gray-900 border-b border-white/10 shadow-md">
-      <div className="max-w-7xl mx-auto flex justify-between items-center p-4">
-        <h1 className="text-2xl font-extrabold tracking-wide text-white">Fitness WebApp</h1>
+    <header className="fixed top-0 left-0 w-full z-50 bg-gradient-to-tr from-gray-600 via-gray-800 to-gray-600 border-b border-white/10 shadow-md">
+      <div className="max-w-7xl mx-auto flex justify-between items-center p-2">
+        <div className='flex flex-row gap-2 justify-center items-center'>
+          <div className="size-14">
+            <img src={logo} alt="FT" className="w-full h-auto block object-contain rounded-full"/>
+          </div>
+          <h1 className="text-2xl font-extrabold tracking-wide text-white">Fitness WebApp</h1>
+        </div>
 
         {/* Hamburger Button */}
         <button
@@ -31,6 +36,7 @@ export default function Navbar() {
             ${isOpen ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 -translate-y-4 pointer-events-none'} 
             md:opacity-100 md:translate-y-0 md:pointer-events-auto
           `}
+          dir='rtl'
         >
           <Link
             to="Home"
@@ -51,28 +57,28 @@ export default function Navbar() {
             onClick={() => setIsOpen(false)}
             className={`${userType == `admin` ? `block` : `hidden`} text-gray-300 hover:text-white transition-colors duration-300 text-lg w-full md:w-auto`}
           >
-            Users
+            المستخدمين
           </Link>
           <Link
             to="Exercises"
             onClick={() => setIsOpen(false)}
             className={`${userType == `admin` ? `block` : `hidden`} text-gray-300 hover:text-white transition-colors duration-300 text-lg w-full md:w-auto`}
           >
-            Exercises
+            التمارين
           </Link>
           <Link
             to="WorkOuts"
             onClick={() => setIsOpen(false)}
             className={`${userType == `admin` ? `block` : `hidden`} text-gray-300 hover:text-white transition-colors duration-300 text-lg w-full md:w-auto`}
           >
-            WorkOut
+            برامج التمارين
           </Link>
           <Link
             to=""
             onClick={() => setIsOpen(false)}
-            className={`${userType == `admin` ? `block` : `hidden`} text-gray-300 hover:text-white transition-colors duration-300 text-lg w-full md:w-auto`}
+            className={` text-gray-300 hover:text-white transition-colors duration-300 text-lg w-full md:w-auto`}
           >
-            Log Out
+            تسجيل خروج
           </Link>
         </nav>
       </div>

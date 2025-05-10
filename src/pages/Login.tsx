@@ -40,7 +40,7 @@ export default function Login() {
             <input
               type="text"
               className="rounded-xl px-4 py-3 bg-white/20 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white focus:bg-white/30 transition"
-              placeholder="you@example.com"
+              placeholder=""
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
@@ -52,7 +52,7 @@ export default function Login() {
             <input
               type="password"
               className="rounded-xl px-4 py-3 bg-white/20 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white focus:bg-white/30 transition"
-              placeholder="••••••••"
+              placeholder=""
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required

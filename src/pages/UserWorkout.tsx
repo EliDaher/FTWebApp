@@ -110,10 +110,10 @@ export default function UserWorkout() {
     setTick((t) => t + 1);
   };
 
-  const toggleExerciseTimer = (exerciseId: string) => {
+ /* const toggleExerciseTimer = (exerciseId: string) => {
     pausedExercisesRef.current[exerciseId] = !pausedExercisesRef.current[exerciseId];
     setTick((t) => t + 1);
-  };
+  };*/
 
   useEffect(() => {
     getWorkout();
@@ -149,7 +149,7 @@ export default function UserWorkout() {
                 مجموعة {i + 1} - تكرارات: {s.reps} - راحة: {s.rest}ث
               </p>
             ))}
-            <div className="flex justify-between items-center mt-3">
+           {/*} <div className="flex justify-between items-center mt-3">
               <span className="text-lg">المؤقت: {formatTime(exerciseTimersRef.current[exercise.exerciseId] || 0)}</span>
               <button
                 onClick={() => toggleExerciseTimer(exercise.exerciseId)}
@@ -157,14 +157,14 @@ export default function UserWorkout() {
               >
                 {pausedExercisesRef.current[exercise.exerciseId] ? 'تشغيل' : 'إيقاف'}
               </button>
-            </div>
+            </div>*/}
           </div>
         ))}
       </div>
 
       {/* زر بدء / إنهاء التمرين */}
       <button
-        className="w-full mt-6 bg-blue-600 text-white py-3 rounded-xl font-bold"
+        className="w-[90%] left-[5%] bg-blue-600 text-white py-3 rounded-xl font-bold fixed bottom-4"
         onClick={started ? endWorkout : startWorkout}
       >
         {started ? 'إنهاء التمرين' : 'بدء التمرين'}

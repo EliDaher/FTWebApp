@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -8,10 +9,23 @@ export default function SignUp() {
   const [Fullname, setFullname] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    try {
+        const response = await axios.post('https://ftserver-ym6z.onrender.com/SignUp', {
+          username: username,
+          password: password,
+          fullname: Fullname,
+          email: "eeli56315@gmail.com"
+        });
+    
+        console.log('✅ Success:', response.data);
+        navigate('/')
 
-    navigate('/Home')
+      } catch (error: any) {
+      console.error('❌ Error:', error.response?.data || error.message);
+      alert('حدث خطأ أثناء حفظ التمرين');
+    }
   };
 
   return (
@@ -25,7 +39,7 @@ export default function SignUp() {
             <input
               type="text"
               className="rounded-xl px-4 py-3 bg-white/20 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white focus:bg-white/30 transition"
-              placeholder="you@example.com"
+              placeholder="الاسم الثلاثي"
               value={Fullname}
               onChange={(e) => setFullname(e.target.value)}
               required
@@ -34,9 +48,9 @@ export default function SignUp() {
           <div className="flex flex-col">
             <label className="text-sm text-white mb-1 text-right mr-2">اسم المستخدم</label>
             <input
-              type="text"
+              type="username"
               className="rounded-xl px-4 py-3 bg-white/20 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white focus:bg-white/30 transition"
-              placeholder="you@example.com"
+              placeholder="اسم المستخدم"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
@@ -45,7 +59,7 @@ export default function SignUp() {
           <div className="flex flex-col">
             <label className="text-sm text-white mb-1 text-right mr-2">كلمة السر</label>
             <input
-              type="text"
+              type="password"
               className="rounded-xl px-4 py-3 bg-white/20 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white focus:bg-white/30 transition"
               placeholder="••••••••"
               value={password}

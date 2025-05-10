@@ -6,10 +6,13 @@ export default function Home() {
   const navigate = useNavigate()
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-gray-800 text-white flex flex-col">
+    <div className="min-h-screen bg-gradient-to-br from-gray-700 via-gray-950 to-gray-900 text-white flex flex-col">
 
       {/* Hero Section */}
       <section className="flex-1 flex flex-col items-center justify-center text-center px-4">
+        <h1 className="text-4xl md:text-6xl font-extrabold mb-6 leading-tight">
+          FT
+        </h1>
         <h2 className="text-4xl md:text-6xl font-extrabold mb-6 leading-tight">
           Build Your Best Body
         </h2>
