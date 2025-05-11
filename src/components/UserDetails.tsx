@@ -38,7 +38,7 @@ export default function UserDetailsPage() {
               <h3 className="text-xl font-semibold text-center">نموذج تعديل البيانات</h3>
               <form className="grid grid-cols-2 gap-4">
                 <input type="text" placeholder="الاسم الكامل" defaultValue={userData.fullname} className="col-span-2 p-2 rounded bg-gray-800 text-white" />
-                <input type="email" placeholder="البريد الإلكتروني" defaultValue={userData.email} className="col-span-2 p-2 rounded bg-gray-800 text-white" />
+                <input type="email" placeholder="البريد الإلكتروني" defaultValue={userData.password} className="col-span-2 p-2 rounded bg-gray-800 text-white" />
                 <input type="text" placeholder="الوظيفة" defaultValue={userData.job} className="p-2 rounded bg-gray-800 text-white" />
                 <input type="text" placeholder="فصيلة الدم" defaultValue={userData.bloodType} className="p-2 rounded bg-gray-800 text-white" />
                 <input type="number" placeholder="الوزن" defaultValue={userData.weight} className="p-2 rounded bg-gray-800 text-white" />

@@ -38,10 +38,10 @@ export default function Exercise() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!imageFile) {
+    /*if (!imageFile) {
       alert('الرجاء اختيار صورة.');
       return;
-    }
+    }*/
 
     const formData = new FormData();
     formData.append('exerciseName', exerciseName);
@@ -50,7 +50,7 @@ export default function Exercise() {
     formData.append('difficulty', difficulty);
     formData.append('description', description);
     formData.append('commonMistakes', commonMistakes);
-    formData.append('imageFile', imageFile);
+    imageFile && formData.append('imageFile', imageFile);
 
     try {
       const response = await axios.post('https://ftserver-ym6z.onrender.com/api/exercises', formData, {
