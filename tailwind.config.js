@@ -6,6 +6,10 @@ export default {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        Orbitron: ['Orbitron', 'sans-serif'], // use your font name
+        cairo: ['cairo', 'sans-serif'], // use your font name
+      },
       colors: {
         primary: {
           100: '#dbeafe',

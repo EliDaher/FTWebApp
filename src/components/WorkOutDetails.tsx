@@ -12,10 +12,7 @@ export default function WorkOutDetails() {
     if (!confirmed) return
 
     try {
-      console.log(workOutData.id)
-      await axios.post("https://ftserver-ym6z.onrender.com/deleteWorkout", {
-        id: workOutData.id
-      })
+      await axios.put(`https://ftserver-ym6z.onrender.com/deleteWorkout/${workOutData.id}`)
 
       alert("تم حذف البرنامج بنجاح")
       navigate("/workouts") // عد إلى قائمة البرامج مثلاً

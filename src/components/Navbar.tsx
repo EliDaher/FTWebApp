@@ -14,7 +14,7 @@ export default function Navbar() {
           <div className="size-14">
             <img src={logo} alt="FT" className="w-full h-auto block object-contain rounded-full"/>
           </div>
-          <h1 className="text-2xl font-extrabold tracking-wide text-white">Fitness WebApp</h1>
+          <h1 className="text-2xl font-extrabold tracking-wide text-white font-Orbitron">Fitness Time</h1>
         </div>
 
         {/* Hamburger Button */}

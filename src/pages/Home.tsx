@@ -13,20 +13,26 @@ export default function Home() {
         {/*<h1 className="text-4xl md:text-6xl font-extrabold mb-6 leading-tight">
           FT
         </h1>*/}
-        <h2 className="text-4xl md:text-6xl font-extrabold mb-6 leading-tight">
-          Build Your Best Body
+        <h2 className="text-5xl md:text-6xl font-Orbitron mb-6 leading-tight">
+          <strong>
+            Fitness
+          </strong> Time <br />
+          <span className="font-cairo">
+            وقت اللياقة
+          </span>
         </h2>
-        <p className="text-gray-400 mb-8 max-w-2xl">
-          Join our community to achieve your fitness goals with personalized plans and expert support.
+        <p dir="rtl" className="text-2xl font-cairo text-gray-400 mb-8 max-w-2xl">
+          لتكون معا في القمة <br/>
+          8 سنوات من النجاح والاستمرار  
         </p>
         <div className="flex space-x-4">
           <a
             onClick={()=>{
               navigate('/UserWorkout')
             }}
-            className="bg-white text-black px-6 py-3 rounded-full font-semibold hover:bg-gray-200 transition"
+            className="bg-white text-black px-12 py-3 rounded-full font-semibold hover:bg-gray-200 transition"
           >
-            Get Started
+            ابدأ
           </a>
         </div>
       </section>
