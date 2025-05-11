@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { WorkOut, WorkOutExercise } from '../types/workout' 
 import axios from 'axios'
 import { Exercise } from '../types/exercise'
-import { Navigate, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 
 type availableExercisesType = { 
