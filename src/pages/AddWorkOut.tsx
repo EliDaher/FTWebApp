@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { WorkOut, WorkOutExercise } from '../types/workout' 
 import axios from 'axios'
 import { Exercise } from '../types/exercise'
+import { Navigate, useNavigate } from 'react-router-dom'
 
 
 type availableExercisesType = { 
@@ -12,6 +13,7 @@ type availableExercisesType = {
 
 
 export default function AddWorkOut() {
+  const navigate = useNavigate()
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [level, setLevel] = useState<'Beginner' | 'Intermediate' | 'Advanced'>('Beginner')
@@ -84,36 +86,46 @@ export default function AddWorkOut() {
     setExercises(updated)
   }
 
-    const handleSubmit = async () => {
-        if(!title) {alert("يجب ادخال اسم للبرنامج"); return}
-        if(exercises.length < 1) {alert("يجب ادخال تمرين واحد على الاقل"); return}
-        
-        const newWorkOut: WorkOut = {
-          id: uuidv4(),
-          title,
-          description,
-          level,
-          duration,
-          createdAt: new Date().toISOString(),
-          exercises
-        }
-
-        console.log(newWorkOut)
-
-
-        try {
-            const response = await axios.post('https://ftserver-ym6z.onrender.com/addWorkOut', {newWorkOut});
-        
-            console.log('✅ Success:', response.data);
-            alert('تم حفظ البرنامج بنجاح');
-            //clearData();
-        } catch (error: any) {
-          console.error('❌ Error:', error.response?.data || error.message);
-          alert('حدث خطأ أثناء حفظ التمرين');
-        }
-
-    
+  const handleSubmit = async () => {
+    if (!title) {
+        alert("يجب ادخال اسم للبرنامج");
+        return;
     }
+    if (exercises.length < 1) {
+        alert("يجب ادخال تمرين واحد على الاقل");
+        return;
+    }
+
+    const invalidExerciseIndex = exercises.findIndex(exe => exe.exerciseId === '');
+    if (invalidExerciseIndex !== -1) {
+        alert(`الرجاء التأكد من البيانات المدخلة في التمرين رقم ${invalidExerciseIndex + 1}`);
+        return;
+    }
+
+    const newWorkOut: WorkOut = {
+        id: uuidv4(),
+        title,
+        description,
+        level,
+        duration,
+        createdAt: new Date().toISOString(),
+        exercises
+    };
+
+    console.log(newWorkOut);
+
+    try {
+        const response = await axios.post('https://ftserver-ym6z.onrender.com/addWorkOut', { newWorkOut });
+        console.log('✅ Success:', response.data);
+        alert('تم حفظ البرنامج بنجاح');
+        navigate('/WorkOuts')
+        //clearData();
+    } catch (error: any) {
+        console.error('❌ Error:', error.response?.data || error.message);
+        alert('حدث خطأ أثناء حفظ التمرين');
+    }
+  }
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-gray-950 to-gray-900 text-white flex flex-col p-4">

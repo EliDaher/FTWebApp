@@ -41,7 +41,7 @@ export default function Navbar() {
           <Link
             to="Home"
             onClick={() => setIsOpen(false)}
-            className={`text-gray-300 hover:text-white transition-colors duration-300 text-lg w-full md:w-auto`}
+            className={`text-gray-300 hover:text-white transition-colors duration-300 text-lg w-full md:w-auto ml-2`}
           >
             الصفحة الرئيسية
           </Link>

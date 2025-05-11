@@ -24,14 +24,14 @@ export default function SignUp() {
 
       } catch (error: any) {
       console.error('❌ Error:', error.response?.data || error.message);
-      alert('حدث خطأ أثناء حفظ التمرين');
+      alert('الرجاء التأكد من البيانات المدخلة');
     }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-black via-gray-900 to-black">
       <div className="bg-white/10 backdrop-blur-md rounded-3xl shadow-2xl p-10 w-full max-w-md border border-white/20">
-        <h2 className="text-3xl font-bold text-white text-center mb-8 tracking-tight">Welcome to FitnessTime</h2>
+        <h2 className="text-3xl font-bold text-white text-center mb-8 tracking-tight font-Orbitron">Welcome to FitnessTime</h2>
         
         <form onSubmit={handleSubmit} className="flex flex-col gap-3">
           <div className="flex flex-col">

@@ -6,6 +6,7 @@ import { WorkOut } from '../types/workout';
 export default function WorkOuts() {
   const [workOuts, setWorkOuts] = useState<WorkOut[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [noWorkouts, setNoWorkouts] = useState(false);
   const navigate = useNavigate();
 
   const getAllWorkOuts = async () => {
@@ -13,10 +14,15 @@ export default function WorkOuts() {
       const response = await axios.post('https://ftserver-ym6z.onrender.com/getAllWorkOuts');
       console.log(response.data)
       const workOutArray = Object.values(response.data.workOuts) as WorkOut[];
+
       setWorkOuts(workOutArray);
+      setNoWorkouts(false)
     } catch (error: any) {
-      alert('حدث خطأ أثناء جلب البرامج التدريبية');
-      console.log(error)
+      if(error.response.data.error == "No workouts found."){
+        setNoWorkouts(true)
+      }else{
+        alert('حدث خطأ أثناء جلب البرامج التدريبية');
+      }
     }
   };
 
@@ -49,6 +55,7 @@ export default function WorkOuts() {
       />
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        { noWorkouts && <div className='text-center'>لم يتم العثور على برامج تدريبية لعرضها</div>}
         {filteredWorkOuts.map((workout) => (
           <div
             onClick={()=>{
