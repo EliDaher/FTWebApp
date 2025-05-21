@@ -10,7 +10,7 @@ createRoot(document.getElementById('root')!).render(
     <WorkoutProvider>
       <StrictMode>
         <App />
-      </StrictMode>,
+      </StrictMode>
     </WorkoutProvider>
   </AuthProvider>
 )

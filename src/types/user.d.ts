@@ -14,5 +14,6 @@ export type User = {
     username: string
     weight: number
     workouts: WorkOut[]
+    address: string
     
 }

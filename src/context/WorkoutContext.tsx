@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, { createContext, useContext, useEffect, useRef, useState } from "react";
 
 type SetType = {
@@ -53,19 +54,23 @@ export const WorkoutProvider = ({ children }: { children: React.ReactNode }) => 
     try {
       const user = localStorage.getItem("user") || "";
       const JSONUser = JSON.parse(user);
-      const res = await fetch("https://ftserver-ym6z.onrender.com/getUserWorkout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username: JSONUser.username }),
+      console.log(JSONUser.username);
+    
+      const res = await axios.post("https://ftserver-ym6z.onrender.com/getUserWorkout", {
+        username: JSONUser.username,
       });
-      const data = await res.json();
-      setWorkout(data.workout);
+    
+      const data = res.data;
+      console.log("Workout data from server:", data);
+    
+      setWorkout(data.workout); // تأكد أن اسم المفتاح مطابق لما في السيرفر
     } catch (err) {
-      console.error(err);
+      console.error("Error getting workout:", err);
     } finally {
       setLoading(false);
     }
   };
+
 
   const startWorkout = () => {
     if (intervalRef.current) clearInterval(intervalRef.current);

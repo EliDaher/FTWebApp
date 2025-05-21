@@ -1,28 +1,35 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { WorkOut } from '../types/workout';
 
 export default function WorkOuts() {
-  const [workOuts, setWorkOuts] = useState<WorkOut[]>([]);
+  const [workOuts, setWorkOuts] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [noWorkouts, setNoWorkouts] = useState(false);
   const navigate = useNavigate();
 
+  const deleteFullWorkout = async (id: string) => {
+    try {
+      const response = await axios.delete(`https://ftserver-ym6z.onrender.com/deleteFullWorkout/${id}`);
+      console.log(response.data)
+      alert('تم حزف البرنامج بنجاح')
+
+    } catch (error: any) {
+      alert('حدث خطأ أثناء حزف البرامج التدريبية');
+      console.log(error)
+    }
+  };
   const getAllWorkOuts = async () => {
     try {
-      const response = await axios.post('https://ftserver-ym6z.onrender.com/getAllWorkOuts');
+      const response = await axios.get('https://ftserver-ym6z.onrender.com/getAllFullWorkout');
       console.log(response.data)
-      const workOutArray = Object.values(response.data.workOuts) as WorkOut[];
+      const workOutArray = Object.values(response.data.fullWorkouts);
 
-      setWorkOuts(workOutArray);
+      setWorkOuts(workOutArray as any);
       setNoWorkouts(false)
     } catch (error: any) {
-      if(error.response.data.error == "No workouts found."){
-        setNoWorkouts(true)
-      }else{
-        alert('حدث خطأ أثناء جلب البرامج التدريبية');
-      }
+      alert('حدث خطأ أثناء جلب البرامج التدريبية');
+      console.log(error)
     }
   };
 
@@ -30,14 +37,14 @@ export default function WorkOuts() {
     getAllWorkOuts();
   }, []);
 
-  const filteredWorkOuts = workOuts.filter((workout) =>
+  const filteredWorkOuts = workOuts.filter((workout: any) =>
     workout.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-gray-950 to-gray-900 text-white p-6">
       <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-6">
-        <h1 className="text-3xl font-bold">البرامج التدريبية</h1>
+        <h1 className="text-3xl font-bold text-center font-cairo">البرامج التدريبية</h1>
         <button
           onClick={() => navigate('/AddWorkOut')}
           className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl transition"
@@ -47,6 +54,7 @@ export default function WorkOuts() {
       </div>
 
       <input
+        dir='rtl'
         type="text"
         placeholder="ابحث عن برنامج تدريبي..."
         value={searchTerm}
@@ -56,23 +64,28 @@ export default function WorkOuts() {
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         { noWorkouts && <div className='text-center'>لم يتم العثور على برامج تدريبية لعرضها</div>}
-        {filteredWorkOuts.map((workout) => (
+        {filteredWorkOuts.map((workout: any) => (
           <div
-            onClick={()=>{
+            dir="rtl"
+            /*onClick={()=>{
                 navigate('/workOutDetails', {
-                    state: workout
+                  state: workout
                 })
-            }}
+            }}*/
             key={workout.id}
-            className="bg-gray-800 p-5 rounded-xl shadow-lg hover:shadow-white/10 transition-all duration-300"
+            className="font-cairo bg-gray-800 p-5 rounded-xl shadow-lg hover:shadow-white/10 transition-all duration-300"
           >
             <h2 className="text-xl font-semibold mb-2">{workout.title}</h2>
-            <p className="text-gray-400 text-sm mb-3">{workout.description}</p>
-            <div className="text-sm text-gray-300 space-y-1">
-              <p><span className="font-medium">المستوى:</span> {workout.level}</p>
-              <p><span className="font-medium">المدة:</span> {workout.duration} دقيقة</p>
-              <p><span className="font-medium">عدد التمارين:</span> {workout.exercises.length}</p>
-            </div>
+            <p className="text-gray-400 text-sm mb-3">عدد ايام التمرين : {workout.workouts.length}</p>
+
+            <button 
+              className="bg-red-500 hover:bg-red-600 text-sm bg-red-500/20 py-2 px-4 rounded-lg"
+              onClick={()=>{
+                deleteFullWorkout(workout.id)
+              }}
+            >
+              حزف البرنامج
+            </button>
           </div>
         ))}
       </div>

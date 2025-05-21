@@ -4,7 +4,7 @@ import { Exercise } from "../types/exercise"
 import { useNavigate } from "react-router-dom";
 
 
-export default function Exercises() {
+export default function Exercises({setIsSelectin, setSelectedId, isSelecting}: any) {
 
     const [exercises, setExercises] = useState<Exercise[]>([]);
     const navigate = useNavigate()
@@ -29,7 +29,7 @@ export default function Exercises() {
     }, []);
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-black via-gray-950 to-gray-900 text-white flex flex-col p-4">
+        <div dir="rtl" className="min-h-screen bg-gradient-to-br from-black via-gray-950 to-gray-900 text-white flex flex-col p-4 pt-10">
 
 
 
@@ -39,7 +39,7 @@ export default function Exercises() {
           {exercises.map((exercise) => (
             <div
                 onClick={()=>{
-                    navigate(`/ExerciseDetails/${exercise.exerciseName}`)
+                    !isSelecting ? navigate(`/ExerciseDetails/${exercise.exerciseName}`) : setSelectedId(exercise.exerciseName); setIsSelectin(false)
                 }}
                 key={exercise.exerciseName}
                 className="bg-gray-800 hover:scale-105 transition-transform duration-300 rounded-xl overflow-hidden shadow-lg hover:shadow-xl"
@@ -66,7 +66,7 @@ export default function Exercises() {
 
 
             {/* add exercise btn */}
-            <button
+            {!isSelecting && <button
                 onClick={()=>{
                     navigate('/AddExercise')
                 }}
@@ -77,7 +77,7 @@ export default function Exercises() {
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" ><path d="M19 11h-6V5h-2v6H5v2h6v6h2v-6h6z"></path></svg>
                 </div>
-            </button>
+            </button>}
         </div>
     )
 }

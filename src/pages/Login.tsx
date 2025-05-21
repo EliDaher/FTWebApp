@@ -30,8 +30,8 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-black via-gray-900 to-black">
-      <div className="bg-white/10 backdrop-blur-md rounded-3xl shadow-2xl p-10 w-full max-w-md border border-white/20">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-black via-gray-900 to-black px-5">
+      <div className="bg-white/10 backdrop-blur-md rounded-3xl shadow-2xl px-5 py-10  w-full max-w-md border border-white/20">
         <h2 className="text-3xl font-bold text-white text-center mb-8 tracking-tight font-Orbitron">Welcome to FitnessTime</h2>
         
         <form onSubmit={handleSubmit} className="flex flex-col gap-6">

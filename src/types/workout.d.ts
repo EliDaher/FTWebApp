@@ -15,4 +15,15 @@ export type WorkOut = {
     createdAt: string
     exercises: WorkOutExercise[]
 }
+
+
+export type FullWorkout = {
+  id: string;
+  title: string;
+  workouts: {
+    workoutName: string;
+    workoutIndex: number;
+    workout: WorkOut;
+  }[]; 
+}
   
