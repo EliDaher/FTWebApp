@@ -1,10 +1,12 @@
 import axios from "axios";
 import { useEffect, useState, FormEvent } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { User } from "../types/user";
 import UserWorkoutForm from "./UserWorkoutForm";
 
 export default function UserDetailsPage() {
+  const navigate = useNavigate()
+
   const { id } = useParams();
   const [userData, setUserData] = useState<User | null>(null);
   const [showForm, setShowForm] = useState(false);
@@ -61,6 +63,27 @@ export default function UserDetailsPage() {
     getUserData();
   }, [id]);
 
+  const deleteUsername = async () => {
+    //e.preventDefault();
+    const confirmDelete = window.confirm("هل أنت متأكد أنك تريد حذف هذا العنصر؟");
+    if (confirmDelete) {
+      // تنفيذ الحذف هنا
+      try {
+        await axios.post(`https://ftserver-ym6z.onrender.com/deleteUsername`, {
+          username: id,
+        });
+        alert("تم حزف المستخدم ✅");
+        navigate('/UsersPage')
+  
+      } catch (error) {
+        console.error("خطأ أثناء الإرسال:", error);
+        alert("فشل الإرسال ❌");
+      }
+    } else {
+      alert("تم الإلغاء");
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-gray-950 to-gray-900 text-white flex flex-col p-4">
       <h1 className="text-3xl text-center font-bold mb-4">معلومات المستخدم</h1>
@@ -81,6 +104,7 @@ export default function UserDetailsPage() {
             <input type="number" placeholder="الطول" value={height.toString()} onChange={(e) => setHeight(Number(e.target.value))} className="p-2 rounded bg-gray-800 text-white" />
             <textarea placeholder="الحالة الصحية" value={healthConditions} onChange={(e) => setHealthConditions(e.target.value)} className="col-span-2 p-2 rounded bg-gray-800 text-white" />
             <button type="submit" className="col-span-2 bg-green-600 hover:bg-green-700 text-white py-2 rounded">حفظ التعديلات</button>
+            <button type="button" onClick={()=>{deleteUsername()}} className="col-span-2 bg-red-600 hover:bg-red-700 text-white py-2 rounded">حزف المستخدم</button>
           </form>
         </div>
       ) : (
