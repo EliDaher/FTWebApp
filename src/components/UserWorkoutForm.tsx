@@ -1,17 +1,11 @@
 import { useEffect, useState } from 'react';
-import {
-  DragDropContext,
-  Droppable,
-  Draggable,
-  DropResult,
-} from '@hello-pangea/dnd';
 import axios from 'axios';
 import { useLocation } from 'react-router-dom';
 
-type Workout = {
+interface Workout {
   id: string;
   title: string;
-};
+}
 
 export default function UserWorkoutForm({
   setShowForm,
@@ -20,182 +14,108 @@ export default function UserWorkoutForm({
   setShowForm: (newValue: boolean) => void;
   username: string | undefined;
 }) {
-  const [workouts, setWorkouts] = useState<Workout[]>([]);
   const [allWorkouts, setAllWorkouts] = useState<Workout[]>([]);
+  const [selectedWorkouts, setSelectedWorkouts] = useState<Set<string>>(new Set());
+  const [searchTerm, setSearchTerm] = useState('');
   const location = useLocation();
 
-  const getWorkouts = async () => {
-    try {
-      const res = await axios.post(
-        'https://ftserver-ym6z.onrender.com/getAllWorkOuts',
-        {
-          username: username,
-        }
-      );
+  useEffect(() => {
+    const getWorkouts = async () => {
+      try {
+        /*const res = await axios.post(
+          'https://ftserver-ym6z.onrender.com/getAllWorkOuts',
+          { username }
+        );*/
+        const res = await axios.get(
+          'https://ftserver-ym6z.onrender.com/getAllFullWorkout'
+        );
 
-      const all: Workout[] = res.data.workOuts || [];
-      const userWorkouts: Workout[] = location.state || [];
+        const all: Workout[] = Object.values(res.data.fullWorkouts) || [];
+        const userWorkouts: Workout[] = location.state || [];
 
-      // تصفية التمارين التي ليست ضمن تمارين المستخدم
-      const filteredAllWorkouts = all.filter(
-        (workout) => !userWorkouts.some((userWorkout) => userWorkout.id === workout.id)
-      );
+        setAllWorkouts(all);
+        setSelectedWorkouts(new Set(userWorkouts.map((w) => w.id)));
+      } catch (err: any) {
+        console.error(err.response?.data || err.message);
+      }
+    };
 
-      setAllWorkouts(filteredAllWorkouts);
-      setWorkouts(userWorkouts);
-    } catch (err: any) {
-      console.error(err.response?.data || err.message);
-    }
+    getWorkouts();
+  }, [username, location.state]);
+
+  const handleCheckboxChange = (id: string) => {
+    setSelectedWorkouts((prev) => {
+      const updated = new Set(prev);
+      if (updated.has(id)) {
+        updated.delete(id);
+      } else {
+        updated.add(id);
+      }
+      return updated;
+    });
   };
 
   const handleSave = async () => {
     try {
-      const sendArr: Workout[] = workouts.map((workout) => ({
-        id: workout.id,
-        title: workout.title,
-      }));
+      const updatedWorkout = allWorkouts
+        .filter((workout) => selectedWorkouts.has(workout.id))
+        .map((workout) => ({ id: workout.id, title: workout.title }));
+        console.log(updatedWorkout)
 
       const res = await axios.post(
         'https://ftserver-ym6z.onrender.com/modifyUserWorkout',
         {
-          username: username,
-          updatedWorkout: {...sendArr},
+          username,
+          updatedWorkout,
         }
       );
 
-      if(res.data.success){
-        alert('تم تعديل البرامج بنجاح')
-        setShowForm(false)
+      if (res.data.success) {
+        alert('تم تعديل البرامج بنجاح');
+        setShowForm(false);
       }
+
     } catch (err: any) {
       console.error(err.response?.data || err.message);
     }
   };
 
-  const onDragEnd = (result: DropResult) => {
-    const { source, destination } = result;
-
-    if (!destination) return;
-
-    if (
-      source.droppableId === destination.droppableId &&
-      source.index === destination.index
-    )
-      return;
-
-    const sourceList = source.droppableId === 'user' ? workouts : allWorkouts;
-    const destList = destination.droppableId === 'user' ? workouts : allWorkouts;
-
-    const [movedItem] = sourceList.splice(source.index, 1);
-
-    const alreadyExists = destList.some((item) => item.id === movedItem.id);
-    if (!alreadyExists) {
-      destList.splice(destination.index, 0, movedItem);
-    }
-
-    if (source.droppableId === 'user') {
-      setWorkouts([...sourceList]);
-      setAllWorkouts([...destList]);
-    } else {
-      setAllWorkouts([...sourceList]);
-      setWorkouts([...destList]);
-    }
-  };
-
-  useEffect(() => {
-    getWorkouts();
-  }, []);
-
+  const filteredWorkouts = allWorkouts.filter((workout) =>
+    workout.title.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
-    <div className='fixed inset-0 bg-black/60 flex items-center justify-center z-50'>
-      <div className='bg-black/70 border border-white/30 rounded-lg p-6 w-3/4 shadow-xl'>
-        <div className='flex flex-row-reverse justify-between mb-2'>
-          <h2
-            dir='rtl'
-            className='text-white text-xl font-bold mb-4 text-right'
-          >
-            البرامج التدريبية للمستخدم
-          </h2>
-
-          <button
-            className='px-3 bg-red-500/80 rounded'
-            onClick={() => setShowForm(false)}
-          >
-            إغلاق
-          </button>
+    <div className='fixed inset-0 bg-black/60 flex items-center justify-center z-50 px-4'>
+      <div className='bg-black/70 border border-white/30 rounded-lg p-6 w-full max-w-3xl shadow-xl'>
+        <div className='flex flex-col sm:flex-row sm:justify-between items-start sm:items-center mb-4 gap-4'>
+          <h2 dir='rtl' className='text-white text-xl font-bold'>البرامج التدريبية للمستخدم</h2>
+          <button className='px-4 py-1 bg-red-500 rounded text-white' onClick={() => setShowForm(false)}>إغلاق</button>
         </div>
 
-        <DragDropContext onDragEnd={onDragEnd}>
-          <div className='grid grid-cols-2 gap-6'>
-            {/* User Workouts */}
-            <Droppable droppableId='user'>
-              {(provided, snapshot) => (
-                <div
-                  ref={provided.innerRef}
-                  {...provided.droppableProps}
-                  className={`min-h-[200px] p-4 border-2 rounded-md transition-colors duration-200 ${
-                    snapshot.isDraggingOver
-                      ? 'bg-black border-gray-500/20'
-                      : 'bg-white/5 border-gray-300/20'
-                  }`}
-                >
-                  <h2 className='font-bold mb-2'>تمارين المستخدم</h2>
-                  {workouts.map((workout, index) => (
-                    <Draggable key={workout.id} draggableId={workout.id} index={index}>
-                      {(provided) => (
-                        <div
-                          ref={provided.innerRef}
-                          {...provided.draggableProps}
-                          {...provided.dragHandleProps}
-                          className='bg-gray-100/10 p-2 mb-2 rounded shadow'
-                        >
-                          {workout.title}
-                        </div>
-                      )}
-                    </Draggable>
-                  ))}
-                  {provided.placeholder}
-                </div>
-              )}
-            </Droppable>
+        <input
+          type='text'
+          placeholder='ابحث عن تمرين...'
+          className='w-full p-2 mb-4 rounded bg-white/10 text-white border border-white/20'
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
 
-            {/* All Workouts */}
-            <Droppable droppableId='all'>
-              {(provided, snapshot) => (
-                <div
-                  ref={provided.innerRef}
-                  {...provided.droppableProps}
-                  className={`min-h-[200px] p-4 border-2 rounded-md transition-colors duration-200 ${
-                    snapshot.isDraggingOver
-                      ? 'bg-black border-gray-500/20'
-                      : 'bg-white/5 border-gray-300/20'
-                  }`}
-                >
-                  <h2 className='font-bold mb-2'>جميع التمارين</h2>
-                  {allWorkouts.map((workout, index) => (
-                    <Draggable key={workout.id} draggableId={workout.id} index={index}>
-                      {(provided) => (
-                        <div
-                          ref={provided.innerRef}
-                          {...provided.draggableProps}
-                          {...provided.dragHandleProps}
-                          className='bg-gray-100/10 p-2 mb-2 rounded shadow'
-                        >
-                          {workout.title}
-                        </div>
-                      )}
-                    </Draggable>
-                  ))}
-                  {provided.placeholder}
-                </div>
-              )}
-            </Droppable>
-          </div>
-        </DragDropContext>
+        <div className='max-h-[50vh] overflow-y-auto scrollbar-thin scrollbar-thumb-white/30 scrollbar-track-white/10 border border-white/20 rounded-lg p-4 bg-white/5'>
+          {filteredWorkouts.map((workout) => (
+            <label key={workout.id} className='flex items-center gap-2 py-2 text-white'>
+              <input
+                type='checkbox'
+                checked={selectedWorkouts.has(workout.id)}
+                onChange={() => handleCheckboxChange(workout.id)}
+                className='form-checkbox text-green-500 w-5 h-5'
+              />
+              <span>{workout.title}</span>
+            </label>
+          ))}
+        </div>
 
         <button
-          className='mt-4 bg-green-600 text-white px-4 py-2 rounded'
+          className='mt-6 bg-green-600 text-white px-4 py-2 rounded w-full sm:w-auto'
           onClick={handleSave}
         >
           حفظ

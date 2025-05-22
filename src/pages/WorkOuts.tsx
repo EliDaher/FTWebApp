@@ -9,14 +9,21 @@ export default function WorkOuts() {
   const navigate = useNavigate();
 
   const deleteFullWorkout = async (id: string) => {
-    try {
-      const response = await axios.delete(`https://ftserver-ym6z.onrender.com/deleteFullWorkout/${id}`);
-      console.log(response.data)
-      alert('تم حزف البرنامج بنجاح')
+    const confirmDelete = window.confirm("هل أنت متأكد أنك تريد حذف هذا العنصر؟");
+    if (confirmDelete) {
+        // تنفيذ الحذف هنا
+        try {
+          const response = await axios.delete(`https://ftserver-ym6z.onrender.com/deleteFullWorkout/${id}`);
+          console.log(response.data)
+        alert('تم حزف البرنامج بنجاح')
+        
+      } catch (error: any) {
+        alert('حدث خطأ أثناء حزف البرامج التدريبية');
+        console.log(error)
+      }
 
-    } catch (error: any) {
-      alert('حدث خطأ أثناء حزف البرامج التدريبية');
-      console.log(error)
+    } else {
+      console.log("تم الإلغاء");
     }
   };
   const getAllWorkOuts = async () => {
