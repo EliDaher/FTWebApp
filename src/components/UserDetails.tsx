@@ -3,6 +3,7 @@ import { useEffect, useState, FormEvent } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { User } from "../types/user";
 import UserWorkoutForm from "./UserWorkoutForm";
+import UserNutritionForm from "./UserNutritionForm";
 
 export default function UserDetailsPage() {
   const navigate = useNavigate()
@@ -10,6 +11,8 @@ export default function UserDetailsPage() {
   const { id } = useParams();
   const [userData, setUserData] = useState<User | null>(null);
   const [showForm, setShowForm] = useState(false);
+
+  const [nutritionForm, setNutritionForm] = useState(false);
 
   const [fullname, setFullname] = useState('');
   const [password, setPassword] = useState('');
@@ -90,6 +93,8 @@ export default function UserDetailsPage() {
       <p className="text-lg text-right mb-4" dir="rtl">المستخدم: {id}</p>
 
       {showForm && <UserWorkoutForm setShowForm={setShowForm} username={id} />}
+      
+      {nutritionForm && <UserNutritionForm setNutritionForm={setNutritionForm} username={id} userNutrition={userData?.nutrition ? userData.nutrition : [] } />}
 
       {/* عرض بيانات المستخدم */}
       {userData ? (
@@ -111,12 +116,21 @@ export default function UserDetailsPage() {
         <p className="text-center mt-6">جاري تحميل البيانات...</p>
       )}
 
-      <button
-        onClick={() => setShowForm(!showForm)}
-        className="self-end mt-6 px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg transition"
-      >
-        {"تعديل البرامج التدريبية"}
-      </button>
+      <div className="flex flex-row-reverse gap-5">
+        <button
+          onClick={() => setShowForm(!showForm)}
+          className="self-end mt-6 px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg transition"
+          >
+          {"تعديل البرامج التدريبية"}
+        </button>
+
+        <button
+          onClick={() => setNutritionForm(!nutritionForm)}
+          className="self-end mt-6 px-4 py-2 bg-yellow-500 hover:bg-yellow-600 rounded-lg transition"
+          >
+          {"تعديل البرامج الغذائية"}
+        </button>
+      </div>
     </div>
   );
 }
