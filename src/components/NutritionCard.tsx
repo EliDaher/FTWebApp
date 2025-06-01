@@ -2,6 +2,7 @@
 import React from "react";
 import { NutritionProgram } from "../types/Nutrition";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 interface Props {
   program: NutritionProgram;
@@ -15,7 +16,26 @@ const NutritionCard: React.FC<Props> = ({ program, id }) => {
     <div onClick={()=>{
             navigate(`/EditNutrition/${id}`)
         }}  dir="rtl" className="bg-black/20 rounded-2xl shadow-md border border-blue-200 p-6 space-y-3">
-      <h2 className="text-xl font-bold text-blue-600">{program.title}</h2>
+      <div className="flex justify-between">
+        
+        <h2 className="text-xl font-bold text-blue-600">{program.title}</h2>
+        <button
+          onClick={async ()=>{
+
+            try {
+              await axios.delete(`https://ftserver-ym6z.onrender.com/deleteNutritionProgram/${id}`);
+              alert("تم حزف البرنامج بنجاح ✅");
+              navigate('/NutritionList')
+            
+            } catch (error) {
+              console.error("خطأ أثناء الإرسال:", error);
+              alert("فشل الإرسال ❌");
+            }
+                  
+          }} 
+          className='bg-red-500 hover:bg-red-600 px-4 py-1 rounded'
+        >حزف</button>
+      </div>
       <p className="text-gray-300"><strong>الوصف:</strong> {program.description}</p>
       <p className="text-gray-300"><strong>السعرات:</strong> {program.calories} كالوري</p>
 
