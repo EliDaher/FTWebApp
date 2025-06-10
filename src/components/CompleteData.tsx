@@ -95,7 +95,7 @@ export default function CompleteData() {
           height
         });
 
-        navigate('/');
+        navigate('/login');
         alert('تم الحفظ البيانات بنجاح')
         clearData()
     } catch (err) {

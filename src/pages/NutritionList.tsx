@@ -4,6 +4,8 @@ import axios from "axios";
 import NutritionCard from "../components/NutritionCard";
 import { NutritionProgram } from "../types/Nutrition";
 import { useNavigate } from "react-router-dom";
+import ScreenWrapper from "../components/ScreenWrapper";
+import HeaderCard from "../components/UI/HeaderCard";
 
 interface ServerResponse {
   success: boolean;
@@ -29,25 +31,26 @@ const NutritionList: React.FC = () => {
   }, []);
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white px-6 py-8">
-            <div className="max-w-6xl mx-auto">
-                <h1 className="text-3xl font-bold text-center mb-8 text-white">البرامج الغذائية</h1>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {programs.map((program, index) => (
-                    <NutritionCard key={index} program={program.data} id={program.id} />
-                  ))}
-                </div>
-            </div>
-
+      <ScreenWrapper>
+        <div className="">
+          <HeaderCard className={'grid grid-cols-3'}>
             {/* زر اضافة برنامج عذائي */}              
             <div onClick={()=>{
                 navigate('/AddNutritionProgram')
-            }} className="fixed bottom-5 left-5 px-2 py-1 rounded-lg bg-green-600 border-2">   
+            }} className="mx-3 rounded-lg bg-green-600 border-2 text-center content-center">   
                 <button>
                     اضافة برنامج غذائي
                 </button>
             </div>
+            <h1 className="text-2xl font-bold text-center text-white">البرامج الغذائية</h1>
+          </HeaderCard>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {programs.map((program, index) => (
+              <NutritionCard key={index} program={program.data} id={program.id} />
+            ))}
+          </div>
         </div>
+      </ScreenWrapper>
     );
 };
 

@@ -1,6 +1,7 @@
 import { useState, ChangeEvent, FormEvent, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
+import ScreenWrapper from "../components/ScreenWrapper";
 
 type FoodItem = {
   food: string;
@@ -113,7 +114,8 @@ export default function EditNutrition() {
     }, [id]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white px-6 py-8">
+    <ScreenWrapper>
+    <div className="min-h-screen text-white px-6 py-8">
       <div className="max-w-3xl mx-auto bg-white bg-opacity-5 backdrop-blur-md rounded-xl shadow-lg p-6">
         <h2 className="text-3xl font-extrabold mb-6 text-center text-white">تعديل برنامج غذائي</h2>
 
@@ -247,5 +249,6 @@ export default function EditNutrition() {
         </form>
       </div>
     </div>
+    </ScreenWrapper>
   );
 }

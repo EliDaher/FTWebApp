@@ -102,8 +102,7 @@ export default function AddWorkOut() {
       id: workoutData?.id || uuidv4(),
       title,
       description,
-      level,
-      duration,
+      category,
       createdAt: workoutData?.createdAt || new Date().toISOString(),
       exercises
     }

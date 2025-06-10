@@ -8,6 +8,7 @@ type SetType = {
 
 type ExerciseType = {
   exerciseId: string;
+  exerciseName: string;
   sets: SetType[];
 };
 

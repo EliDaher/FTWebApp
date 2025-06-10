@@ -1,5 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useWorkout } from "../context/WorkoutContext";
+import ScreenWrapper from "../components/ScreenWrapper";
+import HeaderCard from "../components/UI/HeaderCard";
 
 const formatTime = (seconds: number) => {
   if (isNaN(seconds)) return "00:00";
@@ -25,21 +27,24 @@ export default function UserWorkout() {
   if (!workout) return <div className="text-red-500">لا يوجد تمارين حاليا</div>;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-700 via-gray-950 to-gray-900 text-white flex flex-col pt-8">
-      <div className="text-center mb-4">
-        <h2 className="text-2xl font-bold">{workout?.title}</h2>
-        <p className="text-gray-600">{workout?.description}</p>
-      </div>
+    <ScreenWrapper>
+    <div className="min-h-screen text-white flex flex-col pt-8">
+      <HeaderCard>
+        <div className="text-center mb-4">
+          <h2 className="text-2xl font-bold">{workout?.title}</h2>
+          <p className="text-white/60">{workout?.description}</p>
+        </div>
 
-      {/* المؤقت العام */}
-      <div className="flex justify-center items-center mb-4 text-lg gap-4">
-        <span>⏱️ {formatTime(globalSeconds)}</span>
-        {started && (
-          <button onClick={togglePause} className="bg-yellow-500 px-4 py-1 rounded-full">
-            {paused ? "متابعة" : "إيقاف مؤقت"}
-          </button>
-        )}
-      </div>
+        {/* المؤقت العام */}
+        <div className="flex justify-center items-center text-lg gap-4">
+          <span>⏱️ {formatTime(globalSeconds)}</span>
+          {started && (
+            <button onClick={togglePause} className="bg-yellow-500 px-4 py-1 rounded-full">
+              {paused ? "متابعة" : "إيقاف مؤقت"}
+            </button>
+          )}
+        </div>
+      </HeaderCard>
 
       {/* قائمة التمارين */}
       <div className="space-y-4">
@@ -48,10 +53,10 @@ export default function UserWorkout() {
             key={exercise.exerciseId}
             onClick={() => navigate(`/ExerciseDetails/${exercise.exerciseId}`)}
             dir="rtl"
-            className="bg-gray-100/10 p-4 rounded-xl shadow cursor-pointer"
+            className="bg-gray-50/15 border p-4 rounded-xl shadow cursor-pointer"
           >
             <h3 className="font-bold text-lg">تمرين #{idx + 1}</h3>
-            <p className="font-semibold">{exercise.exerciseId}</p>
+            <p className="font-semibold">{exercise.exerciseName ? exercise.exerciseName : exercise.exerciseId}</p>
             {exercise.sets.map((s, i) => (
               <p key={i} className="text-white/60 mt-2">
                 مجموعة {i + 1} - تكرارات: {s.reps} - راحة: {s.rest}ث
@@ -68,5 +73,6 @@ export default function UserWorkout() {
         {started ? "إنهاء التمرين" : "بدء التمرين"}
       </button>
     </div>
+  </ScreenWrapper>
   );
 }

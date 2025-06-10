@@ -1,93 +1,110 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from "../context/AuthContext";
-import logo from '../assets/exerciseImages/icon.png'
+import { FaBars, FaDumbbell, FaHome, FaList, FaRunning, FaSignOutAlt, FaTimes, FaUsers } from 'react-icons/fa';
+import logo from '../assets/exerciseImages/icon.png';
 
 export default function Navbar() {
-  const [isOpen, setIsOpen] = useState(false);
-  const { userType } = useAuth()
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { userType } = useAuth();
+  const [showSportMenu, setShowSportMenu] = useState(false);
 
   return (
-    <header className="fixed top-0 left-0 w-full z-50 bg-gradient-to-tr from-gray-600 via-gray-800 to-gray-600 border-b border-white/10 shadow-md">
-      <div className="max-w-7xl mx-auto flex justify-between items-center p-2">
-        <div className='flex flex-row gap-2 justify-center items-center'>
-          <div className="size-14">
-            <img src={logo} alt="FT" className="w-full h-auto block object-contain rounded-full"/>
-          </div>
-          <h1 className="text-2xl font-extrabold tracking-wide text-white font-Orbitron">Fitness Time</h1>
+    <>
+      {/* زر القائمة - دائم الظهور */}
+      <button
+        onClick={() => setSidebarOpen(!sidebarOpen)}
+        className={`
+          fixed top-4 right-4 z-50 p-3 rounded-full shadow-lg
+          transition-colors duration-300
+          ${sidebarOpen ? 'bg-red-600 text-white' : 'bg-black/70 text-white'}
+        `}
+        aria-label="Toggle Sidebar"
+      >
+        {sidebarOpen ? <FaTimes className="text-xl" /> : <FaBars className="text-xl" />}
+      </button>
+
+      {/* الشريط الجانبي */}
+      <aside className={`
+        pt-2
+        fixed top-0 right-0 h-full w-64 bg-gray-900/70 shadow-lg z-40
+        transform transition-transform duration-300 ease-in-out
+        ${sidebarOpen ? 'translate-x-0' : 'translate-x-full'}
+      `}>
+        {/* شعار واسم الموقع */}
+        <div className="flex items-center gap-3 p-4 border-b border-white/10">
+          <h1 className="text-white font-Orbitron font-bold text-xl">Fitness Time</h1>
         </div>
 
-        {/* Hamburger Button */}
-        <button
-          onClick={() => setIsOpen(!isOpen)}
-          className=" text-white text-3xl focus:outline-none transition-transform duration-200"
-        >
-          {isOpen ? <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" className='fill-white'><path d="m16.192 6.344-4.243 4.242-4.242-4.242-1.414 1.414L10.535 12l-4.242 4.242 1.414 1.414 4.242-4.242 4.243 4.242 1.414-1.414L13.364 12l4.242-4.242z"></path></svg>
-          : <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" className='fill-white'><path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"></path></svg>}
-        </button>
+        {/* عناصر القائمة */}
+        <nav className="flex flex-col p-4 space-y-2 text-sm font-medium text-white">
 
-        {/* Navigation Links (Desktop + Animated Mobile) */}
-        <nav
-          className={`
-            absolute top-16 left-0 w-full bg-gray-800
-            flex flex-col items-start 
-            space-y-4 px-6 py-4
-            transition-all duration-300 ease-in-out 
-            ${isOpen ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 -translate-y-4 pointer-events-none'} 
-          `}
-          dir='rtl'
-        >
           <Link
             to="Home"
-            onClick={() => setIsOpen(false)}
-            className={`text-gray-300 hover:text-white transition-colors duration-300 text-lg w-full md:w-auto ml-2`}
+            onClick={() => setSidebarOpen(false)}
+            className="flex items-center gap-2 hover:bg-gray-700 p-2 rounded transition"
           >
-            الصفحة الرئيسية
+            <FaHome /> الصفحة الرئيسية
           </Link>
+
+          {/* الرياضة Dropdown */}
+          <div>
+            <button
+              onClick={() => setShowSportMenu(!showSportMenu)}
+              className="w-full flex justify-between items-center hover:bg-gray-700 p-2 rounded transition"
+            >
+              <span className="flex items-center gap-2"><FaDumbbell /> الرياضة</span>
+              <svg
+                className={`w-4 h-4 transition-transform ${showSportMenu ? 'rotate-180' : ''}`}
+                fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+
+            <div className={`overflow-hidden transition-all duration-300 ${showSportMenu ? "max-h-96" : "max-h-0"}`}>
+              <div className="flex flex-col pr-3 mt-1 space-y-1 border rounded-lg border-white/40">
+                <Link to="UserWorkout" onClick={() => setSidebarOpen(false)} className="flex items-center gap-2 p-2 rounded hover:bg-gray-700">
+                  <FaRunning /> تمرين اليوم
+                </Link>
+
+                {userType === 'admin' && (
+                  <>
+                    <Link to="UsersPage" onClick={() => setSidebarOpen(false)} className="flex items-center gap-2 p-2 rounded hover:bg-gray-700">
+                      <FaUsers /> المستخدمين
+                    </Link>
+                    <Link to="Exercises" onClick={() => setSidebarOpen(false)} className="flex items-center gap-2 p-2 rounded hover:bg-gray-700">
+                      <FaDumbbell /> التمارين
+                    </Link>
+                    <Link to="WorkOuts" onClick={() => setSidebarOpen(false)} className="flex items-center gap-2 p-2 rounded hover:bg-gray-700">
+                      <FaList /> برامج التمارين
+                    </Link>
+                    <Link to="NutritionList" onClick={() => setSidebarOpen(false)} className="flex items-center gap-2 p-2 rounded hover:bg-gray-700">
+                      🥗 النظام الغذائي
+                    </Link>
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+
           <Link
-            to="UserWorkout"
-            onClick={() => setIsOpen(false)}
-            className={`text-gray-300 hover:text-white transition-colors duration-300 text-lg w-full md:w-auto`}
+            to="/login"
+            onClick={() => setSidebarOpen(false)}
+            className="flex items-center gap-2 hover:bg-gray-700 p-2 rounded transition"
           >
-            تمرين اليوم
-          </Link>
-          <Link
-            to="UsersPage"
-            onClick={() => setIsOpen(false)}
-            className={`${userType == `admin` ? `block` : `hidden`} text-gray-300 hover:text-white transition-colors duration-300 text-lg w-full md:w-auto`}
-          >
-            المستخدمين
-          </Link>
-          <Link
-            to="Exercises"
-            onClick={() => setIsOpen(false)}
-            className={`${userType == `admin` ? `block` : `hidden`} text-gray-300 hover:text-white transition-colors duration-300 text-lg w-full md:w-auto`}
-          >
-            التمارين
-          </Link>
-          <Link
-            to="WorkOuts"
-            onClick={() => setIsOpen(false)}
-            className={`${userType == `admin` ? `block` : `hidden`} text-gray-300 hover:text-white transition-colors duration-300 text-lg w-full md:w-auto`}
-          >
-            برامج التمارين
-          </Link>
-          <Link
-            to="NutritionList"
-            onClick={() => setIsOpen(false)}
-            className={`${userType == `admin` ? `block` : `hidden`} text-gray-300 hover:text-white transition-colors duration-300 text-lg w-full md:w-auto`}
-          >
-            النظام الغذائي
-          </Link>
-          <Link
-            to=""
-            onClick={() => setIsOpen(false)}
-            className={` text-gray-300 hover:text-white transition-colors duration-300 text-lg w-full md:w-auto`}
-          >
-            تسجيل خروج
+            <FaSignOutAlt /> تسجيل خروج
           </Link>
         </nav>
-      </div>
-    </header>
+      </aside>
+
+      {/* تغطية الشاشة عند فتح الشريط الجانبي */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-30"
+          onClick={() => setSidebarOpen(false)}
+        ></div>
+      )}
+    </>
   );
 }

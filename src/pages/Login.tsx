@@ -2,6 +2,7 @@ import axios from 'axios';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import ScreenWrapper from '../components/ScreenWrapper';
 
 export default function Login() {
   const navigate = useNavigate()
@@ -30,7 +31,8 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-black via-gray-900 to-black px-5">
+    <ScreenWrapper>
+    <div className="min-h-screen flex items-center justify-center px-5">
       <div className="bg-white/10 backdrop-blur-md rounded-3xl shadow-2xl px-5 py-10  w-full max-w-md border border-white/20">
         <h2 className="text-3xl font-bold text-white text-center mb-8 tracking-tight font-Orbitron">Welcome to FitnessTime</h2>
         
@@ -75,5 +77,6 @@ export default function Login() {
         </p>
       </div>
     </div>
+    </ScreenWrapper>
   );
 }

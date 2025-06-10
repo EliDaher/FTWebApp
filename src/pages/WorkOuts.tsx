@@ -1,6 +1,10 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import ScreenWrapper from '../components/ScreenWrapper';
+import HeaderCard from '../components/UI/HeaderCard';
+import BodyCard from '../components/UI/BodyCard';
+import Input from '../components/UI/Input';
 
 export default function WorkOuts() {
   const [workOuts, setWorkOuts] = useState([]);
@@ -11,11 +15,12 @@ export default function WorkOuts() {
   const deleteFullWorkout = async (id: string) => {
     const confirmDelete = window.confirm("هل أنت متأكد أنك تريد حذف هذا العنصر؟");
     if (confirmDelete) {
-        // تنفيذ الحذف هنا
-        try {
-          const response = await axios.delete(`https://ftserver-ym6z.onrender.com/deleteFullWorkout/${id}`);
-          console.log(response.data)
+      // تنفيذ الحذف هنا
+      try {
+        const response = await axios.delete(`https://ftserver-ym6z.onrender.com/deleteFullWorkout/${id}`);
+        console.log(response.data)
         alert('تم حزف البرنامج بنجاح')
+        window.location.reload()
         
       } catch (error: any) {
         alert('حدث خطأ أثناء حزف البرامج التدريبية');
@@ -35,7 +40,11 @@ export default function WorkOuts() {
       setWorkOuts(workOutArray as any);
       setNoWorkouts(false)
     } catch (error: any) {
-      alert('حدث خطأ أثناء جلب البرامج التدريبية');
+      if(error.response.data.error.includes('not found')){
+        alert('لا يوجد برامج تدريبية')
+      }else{
+        alert('حدث خطأ أثناء جلب البرامج التدريبية');
+      }
       console.log(error)
     }
   };
@@ -49,53 +58,58 @@ export default function WorkOuts() {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-gray-950 to-gray-900 text-white p-6">
-      <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-6">
-        <h1 className="text-3xl font-bold text-center font-cairo">البرامج التدريبية</h1>
+    <ScreenWrapper>
+    <div className="">
+      <HeaderCard className={'grid grid-cols-3'}>
         <button
           onClick={() => navigate('/AddWorkOut')}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl transition"
-        >
+          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl transition mx-9"
+          >
           إضافة برنامج
         </button>
-      </div>
+        <h1 className="text-3xl font-bold text-center font-cairo">البرامج التدريبية</h1>
+      </HeaderCard>
 
-      <input
-        dir='rtl'
-        type="text"
-        placeholder="ابحث عن برنامج تدريبي..."
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        className="w-full p-3 mb-6 rounded-xl bg-gray-800 text-white placeholder-gray-400 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-600"
-      />
+      <BodyCard>
+        <Input
+          name='search'
+          type="text"
+          placeholder="ابحث عن برنامج تدريبي..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="mb-5"
+        />
 
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        { noWorkouts && <div className='text-center'>لم يتم العثور على برامج تدريبية لعرضها</div>}
-        {filteredWorkOuts.map((workout: any) => (
-          <div
-            dir="rtl"
-            /*onClick={()=>{
-                navigate('/workOutDetails', {
-                  state: workout
-                })
-            }}*/
-            key={workout.id}
-            className="font-cairo bg-gray-800 p-5 rounded-xl shadow-lg hover:shadow-white/10 transition-all duration-300"
-          >
-            <h2 className="text-xl font-semibold mb-2">{workout.title}</h2>
-            <p className="text-gray-400 text-sm mb-3">عدد ايام التمرين : {workout.workouts.length}</p>
-
-            <button 
-              className="bg-red-500 hover:bg-red-600 text-sm bg-red-500/20 py-2 px-4 rounded-lg"
-              onClick={()=>{
-                deleteFullWorkout(workout.id)
-              }}
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          { noWorkouts && <div className='text-center'>لم يتم العثور على برامج تدريبية لعرضها</div>}
+          {filteredWorkOuts.map((workout: any) => (
+            <div
+              dir="rtl"
+              /*onClick={()=>{
+                  navigate('/workOutDetails', {
+                    state: workout
+                  })
+              }}*/
+              key={workout.id}
+              className="font-cairo bg-blue-50/10 border px-4 py-2 rounded shadow-lg hover:shadow-white/10 transition-all duration-300 flex justify-between items-center"
             >
-              حزف البرنامج
-            </button>
-          </div>
-        ))}
-      </div>
+              <div>
+                <h2 className="text-xl font-semibold mb-2">{workout.title}</h2>
+                <p className="text-gray-400 text-sm mb-3">عدد ايام التمرين : {workout.workouts.length}</p>
+              </div>
+              <button 
+                className="bg-red-500 hover:bg-red-600 border border-red-500 transition text-sm bg-red-500/20 py-2 px-4 rounded"
+                onClick={()=>{
+                  deleteFullWorkout(workout.id)
+                }}
+              >
+                حزف البرنامج
+              </button>
+            </div>
+          ))}
+        </div>
+      </BodyCard>
     </div>
+    </ScreenWrapper>
   );
 }

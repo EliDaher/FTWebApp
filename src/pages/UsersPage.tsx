@@ -2,86 +2,101 @@ import axios from "axios"
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { User } from "../types/user"
+import ScreenWrapper from "../components/ScreenWrapper"
+import HeaderCard from "../components/UI/HeaderCard"
+import BodyCard from "../components/UI/BodyCard"
+import Input from "../components/UI/Input"
 
 export default function UsersPage() {
+  const [searchTerm, setSearchTerm] = useState("")
+  const [users, setUsers] = useState<User[]>([])
+  const navigate = useNavigate()
 
-    const [searchTerm, setSearchTerm] = useState('')
-    const [users, setUsers] = useState<User[]>([])
-    const navigate = useNavigate()  
-
-    
-    const getALlUsers = async () => {
-        try {
-            const response = await axios.get('https://ftserver-ym6z.onrender.com/getAllUsers');
-            const usersArray = Object.values(response.data.usersData) as User[];
-            setUsers(usersArray)
-            
-        } catch (error: any) {
-            alert('حدث خطأ أثناء جلب البرامج التدريبية');
-            console.log(error)
-        }
+  const getAllUsers = async () => {
+    try {
+      const response = await axios.get("https://ftserver-ym6z.onrender.com/getAllUsers")
+      const usersArray = Object.values(response.data.usersData) as User[]
+      setUsers(usersArray)
+    } catch (error: any) {
+      alert("حدث خطأ أثناء جلب المستخدمين")
+      console.log(error)
     }
+  }
 
-    useEffect(() => {
-        getALlUsers()
-    }, [])  
+  useEffect(() => {
+    getAllUsers()
+  }, [])
 
+  const filteredUsers = users.filter(user =>
+    user.fullname.includes(searchTerm) || user.username.includes(searchTerm)
+  )
 
+  const handleRowClick = (user: User) => {
+    navigate(`/user/${user.username}`, { state: user.workouts })
+  }
 
-    const filteredUsers = users.filter(user =>
-      user.fullname.includes(searchTerm) ||
-      user.username.includes(searchTerm)
-    )   
-    const handleRowClick = (user: User) => {
-      navigate(`/user/${user.username}`, { state: user.workouts })
+  return (
+    <ScreenWrapper>
+      <div className="">
+        <div className="max-w-6xl mx-auto flex flex-col gap-6">
+          <HeaderCard>
+          {/* العنوان */}
+            <h1 className="text-4xl font-bold text-center text-blue-50 font-Orbitron drop-shadow-lg">
+              المستخدمين
+            </h1>
+          </HeaderCard>
+          <BodyCard>
 
-    }   
-    return (
-        <div className="min-h-screen bg-gradient-to-br from-black via-gray-950 to-gray-900 text-white flex flex-col p-4">
-          <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-6">
-            <h1 className="text-3xl font-bold text-center">المستخدمين</h1>
-          </div>  
-          <input
-            type="text"
-            placeholder="ابحث عن مستخدم..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full p-3 mb-6 rounded-xl bg-gray-800 text-white placeholder-gray-400 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-600"
-          />  
-          <div className="overflow-x-auto">
-            <table className="w-full text-center border border-gray-700 rounded-lg overflow-hidden">
-              <thead className="bg-gray-800 text-gray-300">
-                <tr>
-                  <th className="py-3 px-4 border-b border-gray-700">الاسم</th>
-                  <th className="py-3 px-4 border-b border-gray-700">اسم المستخدم</th>
-                  <th className="py-3 px-4 border-b border-gray-700">الوزن</th>
-                  <th className="py-3 px-4 border-b border-gray-700">الطول</th>
-                  <th className="py-3 px-4 border-b border-gray-700">الوظيفة</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredUsers.length > 0 ? (
-                  filteredUsers.map(user => (
-                    <tr
+            {/* حقل البحث */}
+            <div className="mb-4">
+              <Input
+                name="search"
+                label="بحث"
+                type="text"
+                placeholder="ابحث باسم المستخدم أو الاسم الكامل..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+
+            {/* الجدول */}
+            <div className="overflow-x-auto backdrop-blur-md bg-white/10 border border-white/20 rounded-xl shadow-xl">
+              <table className="min-w-full text-sm md:text-base text-center">
+                <thead className="bg-black/40 backdrop-blur-sm text-white font-bold">
+                  <tr>
+                    <th className="py-4 px-4 border-b border-white/20">الاسم الكامل</th>
+                    <th className="py-4 px-4 border-b border-white/20">اسم المستخدم</th>
+                    <th className="py-4 px-4 border-b border-white/20">الوزن</th>
+                    <th className="py-4 px-4 border-b border-white/20">الطول</th>
+                    <th className="py-4 px-4 border-b border-white/20">الوظيفة</th>
+                  </tr>
+                </thead>
+                <tbody className="text-gray-200">
+                  {filteredUsers.length > 0 ? (
+                    filteredUsers.map((user) => (
+                      <tr
                         key={user.username}
                         onClick={() => handleRowClick(user)}
-                        className="cursor-pointer hover:bg-gray-800 transition"
-                    >   
-                        <td className="py-2 px-4 border-b border-gray-700">{user.fullname}</td>
-                        <td className="py-2 px-4 border-b border-gray-700">{user.username}</td>
-                        <td className="py-2 px-4 border-b border-gray-700">{user.weight}</td>
-                        <td className="py-2 px-4 border-b border-gray-700">{user.height}</td>
-                        <td className="py-2 px-4 border-b border-gray-700">{user.job}</td>
-                    </tr>
-                  ))
-                ) : (
+                        className="hover:bg-blue-500/15 bg-black/20 cursor-pointer transition"
+                      >
+                        <td className="py-3 px-4 border-b border-white/10">{user.fullname}</td>
+                        <td className="py-3 px-4 border-b border-white/10">{user.username}</td>
+                        <td className="py-3 px-4 border-b border-white/10">{user.weight}</td>
+                        <td className="py-3 px-4 border-b border-white/10">{user.height}</td>
+                        <td className="py-3 px-4 border-b border-white/10">{user.job}</td>
+                      </tr>
+                    ))
+                  ) : (
                     <tr>
-                        <td colSpan={5} className="py-4 text-gray-400">لا يوجد نتائج</td>
+                      <td colSpan={5} className="py-6 text-gray-300 font-cairo">لا يوجد نتائج مطابقة</td>
                     </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </BodyCard>
         </div>
-    )
+      </div>
+    </ScreenWrapper>
+  )
 }

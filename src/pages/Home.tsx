@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import ScreenWrapper from "../components/ScreenWrapper";
 
 
 export default function Home() {
@@ -6,8 +7,8 @@ export default function Home() {
   const navigate = useNavigate()
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-700 via-gray-950 to-gray-900 text-white flex flex-col">
-
+    <ScreenWrapper>
+      <div className="h-screen text-white flex flex-col">
       {/* Hero Section */}
       <section className="flex-1 flex flex-col items-center justify-center text-center px-4">
         {/*<h1 className="text-4xl md:text-6xl font-extrabold mb-6 leading-tight">
@@ -22,25 +23,26 @@ export default function Home() {
           </span>
         </h2>
         <p dir="rtl" className="text-2xl font-cairo text-gray-400 mb-8 max-w-2xl">
-          لتكون معا في القمة <br/>
+          لنكون معا في القمة <br/>
           8 سنوات من النجاح والاستمرار  
         </p>
         <div className="flex space-x-4">
-          <a
+          <button
             onClick={()=>{
               navigate('/UserWorkout')
             }}
             className="bg-white text-black px-12 py-3 rounded-full font-semibold hover:bg-gray-200 transition"
           >
             ابدأ
-          </a>
+          </button>
         </div>
       </section>
 
-      {/* Footer */}
+      {/* Footer
       <footer className="text-center p-4 text-gray-500 text-sm">
         © 2025 Fitness WebApp. All rights reserved.
-      </footer>
+      </footer> */}
     </div>
+    </ScreenWrapper>
   );
 }

@@ -1,5 +1,6 @@
 import { useState, ChangeEvent, FormEvent } from "react";
 import axios from "axios";
+import ScreenWrapper from "../components/ScreenWrapper";
 
 type FoodItem = {
   food: string;
@@ -99,8 +100,9 @@ export default function AddNutritionProgram() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white px-6 py-8">
-      <div className="max-w-3xl mx-auto bg-white bg-opacity-5 backdrop-blur-md rounded-xl shadow-lg p-6">
+    <ScreenWrapper>
+    <div className="min-h-screen text-white px-6 py-8">
+      <div className="max-w-3xl mx-auto bg-white bg-opacity-5 border-2 backdrop-blur-md rounded-xl shadow-lg p-6">
         <h2 className="text-3xl font-extrabold mb-6 text-center text-white">تعديل برنامج غذائي</h2>
 
         <form dir="rtl" onSubmit={handleSubmit} className="space-y-5">
@@ -233,5 +235,6 @@ export default function AddNutritionProgram() {
         </form>
       </div>
     </div>
+    </ScreenWrapper>
   );
 }

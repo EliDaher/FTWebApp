@@ -25,6 +25,7 @@ export default function App() {
         <Routes>
 
           <Route path="/" element={<Login />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/SignUP" element={<SignUp />} />
           <Route path="/CompleteData/:userId" element={<CompleteData />} />
           <Route element={<MainLayout />}>

@@ -6,5 +6,6 @@ export interface Exercise {
     description: string;
     commonMistakes: string;
     imageUrl: string;
+    id: string
 }
   
