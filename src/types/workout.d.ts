@@ -11,7 +11,7 @@ export type WorkOut = {
     id: string
     title: string
     description: string
-    category: string
+    category?: string
     createdAt: string
     exercises: WorkOutExercise[]
 }
