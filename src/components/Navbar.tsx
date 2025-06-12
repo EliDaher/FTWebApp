@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from "../context/AuthContext";
 import { FaBars, FaDumbbell, FaHome, FaList, FaRunning, FaSignOutAlt, FaTimes, FaUsers } from 'react-icons/fa';
-import logo from '../assets/exerciseImages/icon.png';
 
 export default function Navbar() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
