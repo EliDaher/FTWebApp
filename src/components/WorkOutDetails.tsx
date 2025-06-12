@@ -251,7 +251,7 @@ export default function WorkOutDetails() {
     setCategory(newCategory);
   };
 
-  const handleDeleteSuggestion = (indexToDelete: number) => {
+  /*const handleDeleteSuggestion = (indexToDelete: number) => {
     const updatedSuggestions = suggestions.filter((_, i) => i !== indexToDelete);
     setSuggestions(updatedSuggestions);
 
@@ -263,7 +263,7 @@ export default function WorkOutDetails() {
       });
     }
     handleDayChange('اليوم 1')
-  };
+  };*/
 
 
   useEffect(() => {
