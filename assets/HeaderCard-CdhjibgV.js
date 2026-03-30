@@ -1,0 +1,1 @@
+import{j as a}from"./index-Bv0ZhwXd.js";function m({children:r,className:s=""}){return a.jsx("header",{className:`glass-surface-strong mb-5 mt-2 px-4 py-3 md:px-5 md:py-4 ${s}`,children:r})}export{m as H};

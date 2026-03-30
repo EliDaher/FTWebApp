@@ -1,0 +1,1 @@
+import{j as a}from"./index-Bv0ZhwXd.js";function t({children:r,className:s="",...o}){return a.jsx("section",{className:`glass-surface p-4 md:p-6 border border-white/20 shadow-[0_20px_50px_rgba(2,8,23,0.35)] ${s}`,...o,children:r})}export{t as B};
