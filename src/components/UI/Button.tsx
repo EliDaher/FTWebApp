@@ -1,0 +1,54 @@
+import type { ButtonHTMLAttributes, ReactNode } from "react";
+
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: "primary" | "secondary" | "danger" | "ghost";
+  size?: "sm" | "md" | "lg";
+  loading?: boolean;
+  children: ReactNode;
+}
+
+const variantMap: Record<NonNullable<ButtonProps["variant"]>, string> = {
+  primary:
+    "text-black bg-gradient-to-r from-yellow-300 to-yellow-500 border-yellow-200/70 hover:from-yellow-200 hover:to-yellow-400",
+  secondary:
+    "text-yellow-100 bg-gradient-to-r from-zinc-900 to-black border-yellow-300/45 hover:from-zinc-800 hover:to-zinc-900",
+  danger:
+    "text-white bg-gradient-to-r from-rose-500 to-red-600 border-rose-300/40 hover:from-rose-400 hover:to-red-500",
+  ghost:
+    "text-yellow-100 bg-black/30 border-yellow-300/35 hover:bg-yellow-300/15",
+};
+
+const sizeMap: Record<NonNullable<ButtonProps["size"]>, string> = {
+  sm: "h-9 px-3 text-sm",
+  md: "h-11 px-4 text-sm md:text-base",
+  lg: "h-12 px-5 text-base",
+};
+
+export default function Button({
+  variant = "primary",
+  size = "md",
+  loading = false,
+  children,
+  className = "",
+  disabled,
+  ...props
+}: ButtonProps) {
+  const isDisabled = disabled || loading;
+
+  return (
+    <button
+      className={`inline-flex items-center justify-center gap-2 rounded-xl border font-semibold shadow-sm transition-all duration-200 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60 ${variantMap[variant]} ${sizeMap[size]} ${className}`}
+      disabled={isDisabled}
+      {...props}
+    >
+      {loading ? (
+        <span className="inline-flex items-center gap-2">
+          <span className="h-4 w-4 rounded-full border-2 border-current/45 border-t-current animate-spin" />
+          جاري التحميل...
+        </span>
+      ) : (
+        children
+      )}
+    </button>
+  );
+}

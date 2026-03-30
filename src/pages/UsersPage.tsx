@@ -41,7 +41,7 @@ export default function UsersPage() {
         <div className="max-w-6xl mx-auto flex flex-col gap-6">
           <HeaderCard>
           {/* العنوان */}
-            <h1 className="text-4xl font-bold text-center text-blue-50 font-Orbitron drop-shadow-lg">
+            <h1 className="text-4xl font-bold text-center text-yellow-100 font-Orbitron drop-shadow-lg">
               المستخدمين
             </h1>
           </HeaderCard>
@@ -77,7 +77,7 @@ export default function UsersPage() {
                       <tr
                         key={user.username}
                         onClick={() => handleRowClick(user)}
-                        className="hover:bg-blue-500/15 bg-black/20 cursor-pointer transition"
+                        className="hover:bg-yellow-400/10 bg-black/20 cursor-pointer transition"
                       >
                         <td className="py-3 px-4 border-b border-white/10">{user.fullname}</td>
                         <td className="py-3 px-4 border-b border-white/10">{user.username}</td>
@@ -100,3 +100,4 @@ export default function UsersPage() {
     </ScreenWrapper>
   )
 }
+

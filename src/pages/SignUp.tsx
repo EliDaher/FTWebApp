@@ -1,113 +1,168 @@
-import axios from 'axios';
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import ScreenWrapper from '../components/ScreenWrapper';
+import { useState, type FormEvent } from "react";
+import { useNavigate } from "react-router-dom";
+import ScreenWrapper from "../components/ScreenWrapper";
+import Input from "../components/UI/Input";
+import Button from "../components/UI/Button";
+import apiClient from "../lib/axios";
+import BrandLogo from "../components/BrandLogo";
+
+const convertToEnglishNumbers = (text: string) =>
+  text.replace(/[\u0660-\u0669]/g, (digit) => String.fromCharCode(digit.charCodeAt(0) - 0x0660 + 48));
 
 export default function SignUp() {
-  const navigate = useNavigate()
-  const [ConfirmPass, setConfirmPass] = useState('');
-  const [username, setUsername] = useState('');
-  const [Fullname, setFullname] = useState('');
-  const [password, setPassword] = useState('');
-  const [number, setNumber] = useState('');
+  const navigate = useNavigate();
 
-  
-  const convertToEnglishNumbers = (text: string) => {
-    return text.replace(/[\u0660-\u0669]/g, (d) =>
-      String.fromCharCode(d.charCodeAt(0) - 0x0660 + 48)
-    );
-  };
+  const [fullName, setFullName] = useState("");
+  const [username, setUsername] = useState("");
+  const [number, setNumber] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPass, setConfirmPass] = useState("");
+  const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setError("");
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+    if (password !== confirmPass) {
+      setError("تأكيد كلمة المرور غير متطابق.");
+      return;
+    }
+
+    if (!fullName.trim()) {
+      setError("يرجى إدخال الاسم الكامل.");
+      return;
+    }
+
     try {
-        const response = await axios.post('https://ftserver-ym6z.onrender.com/SignUp', {
-          username: username,
-          password: password,
-          fullname: Fullname,
-          number: number,
-        });
-    
-        console.log('✅ Success:', response.data);
-        navigate(`/CompleteData/${username}`)
+      setIsSubmitting(true);
 
-      } catch (error: any) {
-      console.error('❌ Error:', error.response?.data || error.message);
-      error.response?.data.error.includes('Username')  ? 
-        alert('الاسم موجود بالفعل')
-      : alert('الرجاء التأكد من البيانات المدخلة');
+      const finalUsername = username.trim() || fullName.trim();
+
+      await apiClient.post("/SignUp", {
+        username: finalUsername,
+        password,
+        fullname: fullName.trim(),
+        number: number.trim(),
+      });
+
+      navigate(`/CompleteData/${finalUsername}`);
+    } catch (requestError: unknown) {
+      const serverMessage =
+        typeof requestError === "object" &&
+        requestError !== null &&
+        "response" in requestError &&
+        typeof (requestError as { response?: { data?: { error?: unknown } } }).response?.data?.error ===
+          "string"
+          ? ((requestError as { response?: { data?: { error?: string } } }).response?.data?.error ?? "")
+          : "";
+      if (typeof serverMessage === "string" && serverMessage.toLowerCase().includes("username")) {
+        setError("اسم المستخدم موجود مسبقًا.");
+      } else {
+        setError("يرجى التحقق من البيانات والمحاولة مرة أخرى.");
+      }
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   return (
     <ScreenWrapper>
-    <div className="min-h-screen flex items-center justify-center px-5">
-      <div className="bg-white/10 backdrop-blur-md rounded-3xl shadow-2xl py-10 px-5 w-full max-w-md border border-white/20">
-        <h2 className="text-3xl font-bold text-white text-center mb-8 tracking-tight font-Orbitron">Welcome to FitnessTime</h2>
-        
-        <form onSubmit={handleSubmit} className="flex flex-col gap-3">
-          <div className="flex flex-col">
-            <label className="text-sm text-white mb-1 text-right mr-2">الاسم الثلاثي</label>
-            <input
-              type="text"
-              className="rounded-xl px-4 py-3 bg-white/20 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white focus:bg-white/30 transition"
-              placeholder="الاسم الثلاثي"
-              value={Fullname}
-              onChange={(e) => {setFullname(e.target.value); setUsername(e.target.value)}}
+      <div className="mx-auto grid min-h-[80vh] w-full max-w-5xl items-center gap-8 md:grid-cols-[1.2fr_1fr]">
+        <section dir="rtl" className="hidden md:block">
+          <BrandLogo className="mb-5" imageClassName="h-16 w-16" />
+          <h1 className="font-Orbitron text-5xl font-black leading-tight text-white">
+            ابنِ
+            <br />
+            روتينك الرياضي
+          </h1>
+          <p className="mt-4 max-w-md text-lg text-slate-200/80">
+            أنشئ حسابك للوصول إلى الخطط المخصصة والتمارين وتتبع التغذية.
+          </p>
+        </section>
+
+        <section dir="rtl" className="glass-surface-strong p-6 md:p-8">
+          <h2 className="font-Orbitron text-3xl font-bold text-white">إنشاء حساب</h2>
+          <p className="mt-1 text-sm text-slate-300/80">أدخل بياناتك التالية.</p>
+
+          <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+            <Input
+              name="full-name"
+              label="الاسم الكامل"
+              value={fullName}
+              onChange={(event) => {
+                const value = event.target.value;
+                setFullName(value);
+                if (!username) {
+                  setUsername(value);
+                }
+              }}
+              placeholder="اسمك الكامل"
               required
             />
-          </div>
-          <div className="flex flex-col">
-            <label className="text-sm text-white mb-1 text-right mr-2">رقم الجوال</label>
-            <input
-              type="number"
-              className="rounded-xl px-4 py-3 bg-white/20 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white focus:bg-white/30 transition"
-              placeholder="رقم الجوال"
+
+            <Input
+              name="username"
+              label="اسم المستخدم"
+              value={username}
+              onChange={(event) => setUsername(event.target.value)}
+              placeholder="اختر اسم المستخدم"
+              required
+            />
+
+            <Input
+              name="phone"
+              type="tel"
+              label="رقم الهاتف"
               value={number}
-              onChange={(e) => setNumber(convertToEnglishNumbers(e.target.value))}
+              onChange={(event) => setNumber(convertToEnglishNumbers(event.target.value))}
+              placeholder="09xxxxxxxx"
               required
             />
-          </div>
-          <div className="flex flex-col">
-            <label className="text-sm text-white mb-1 text-right mr-2">كلمة السر</label>
-            <input
+
+            <Input
+              name="password"
               type="password"
-              className="rounded-xl px-4 py-3 bg-white/20 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white focus:bg-white/30 transition"
-              placeholder="••••••••"
+              label="كلمة المرور"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(event) => setPassword(event.target.value)}
+              placeholder="أدخل كلمة المرور"
               required
             />
-          </div>
-          <div className="flex flex-col">
-            <label className="text-sm text-white mb-1 text-right mr-2">تأكيد كلمة المرور</label>
-            <input
+
+            <Input
+              name="confirm-password"
               type="password"
-              className="rounded-xl px-4 py-3 bg-white/20 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white focus:bg-white/30 transition"
-              placeholder="••••••••"
-              value={ConfirmPass}
-              onChange={(e) => setConfirmPass(e.target.value)}
+              label="تأكيد كلمة المرور"
+              value={confirmPass}
+              onChange={(event) => setConfirmPass(event.target.value)}
+              placeholder="أعد كتابة كلمة المرور"
               required
             />
-          </div>
 
-          <button
-            type="submit"
-            className="bg-white text-black font-semibold py-3 rounded-xl hover:bg-gray-200 transition mt-4"
-            onClick={()=>{
-                
-            }}
-          >
-            تسجيل الدخول
-          </button>
-        </form>
+            {error ? (
+              <p className="rounded-lg border border-rose-300/50 bg-rose-500/15 px-3 py-2 text-sm text-rose-100">
+                {error}
+              </p>
+            ) : null}
 
-        <p className="text-center text-sm text-white/60 mt-6">
-          تملك حسابا بالفعل <span onClick={()=>{navigate('/login')}} className="underline cursor-pointer hover:text-white">سجل الدخول</span>
-        </p>
+            <Button type="submit" loading={isSubmitting} className="w-full">
+              إنشاء حساب
+            </Button>
+          </form>
+
+          <p className="mt-5 text-center text-sm text-slate-300/85">
+            لديك حساب بالفعل؟{" "}
+            <button
+              type="button"
+              onClick={() => navigate("/login")}
+              className="font-semibold text-yellow-300 underline decoration-yellow-300/70 underline-offset-4 hover:text-yellow-100"
+            >
+              تسجيل الدخول
+            </button>
+          </p>
+        </section>
       </div>
-    </div>
     </ScreenWrapper>
   );
 }

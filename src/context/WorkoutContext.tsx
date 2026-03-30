@@ -1,5 +1,15 @@
-import axios from "axios";
-import React, { createContext, useContext, useEffect, useRef, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
+import { getStoredAuthUser } from "../lib/authStorage";
+import apiClient from "../lib/axios";
 
 type SetType = {
   reps: number;
@@ -22,112 +32,139 @@ type WorkoutType = {
   exercises: ExerciseType[];
 };
 
+type WorkoutResponse = {
+  workout?: WorkoutType | null;
+};
+
 type WorkoutContextType = {
   workout: WorkoutType | null;
   loading: boolean;
   started: boolean;
-  tick: number;
+  paused: boolean;
+  globalSeconds: number;
   startWorkout: () => void;
   endWorkout: () => void;
   togglePause: () => void;
-  paused: boolean;
-  globalSeconds: number;
+  refreshWorkout: () => Promise<void>;
 };
 
 const WorkoutContext = createContext<WorkoutContextType | undefined>(undefined);
 
-export const useWorkout = () => {
+export const useWorkout = (): WorkoutContextType => {
   const ctx = useContext(WorkoutContext);
   if (!ctx) throw new Error("WorkoutProvider missing");
   return ctx;
 };
 
-export const WorkoutProvider = ({ children }: { children: React.ReactNode }) => {
+export const WorkoutProvider = ({ children }: { children: ReactNode }) => {
   const [workout, setWorkout] = useState<WorkoutType | null>(null);
   const [loading, setLoading] = useState(true);
   const [started, setStarted] = useState(false);
   const [paused, setPaused] = useState(false);
-  const [tick, setTick] = useState(0);
   const [globalSeconds, setGlobalSeconds] = useState(0);
-  const intervalRef = useRef<number | null>(null);
 
-  const getWorkout = async () => {
+  const fetchedOnMountRef = useRef(false);
+  const intervalRef = useRef<ReturnType<typeof window.setInterval> | null>(null);
+
+  const clearTimer = useCallback(() => {
+    if (intervalRef.current !== null) {
+      window.clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+  }, []);
+
+  const runTimer = useCallback(() => {
+    clearTimer();
+    intervalRef.current = window.setInterval(() => {
+      setGlobalSeconds((prev) => prev + 1);
+    }, 1000);
+  }, [clearTimer]);
+
+  const refreshWorkout = useCallback(async () => {
+    setLoading(true);
+
     try {
-      const user = localStorage.getItem("user") || "";
-      const JSONUser = JSON.parse(user);
-      console.log(JSONUser.username);
-    
-      const res = await axios.post("https://ftserver-ym6z.onrender.com/getUserWorkout", {
-        username: JSONUser.username,
+      const storedUser = getStoredAuthUser();
+      const username = storedUser?.username;
+
+      if (typeof username !== "string" || !username.trim()) {
+        setWorkout(null);
+        return;
+      }
+
+      const res = await apiClient.post<WorkoutResponse>("/getUserWorkout", {
+        username,
       });
-    
-      const data = res.data;
-      console.log("Workout data from server:", data);
-    
-      setWorkout(data.workout); // تأكد أن اسم المفتاح مطابق لما في السيرفر
+
+      setWorkout(res.data?.workout ?? null);
     } catch (err) {
       console.error("Error getting workout:", err);
+      setWorkout(null);
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-
-  const startWorkout = () => {
-    if (intervalRef.current) clearInterval(intervalRef.current);
+  const startWorkout = useCallback(() => {
     setStarted(true);
     setPaused(false);
-    intervalRef.current = setInterval(() => {
-      setGlobalSeconds((prev) => prev + 1);
-      setTick((t) => t + 1);
-    }, 1000);
-  };
+    runTimer();
+  }, [runTimer]);
 
-  const endWorkout = () => {
-    if (intervalRef.current) clearInterval(intervalRef.current);
+  const endWorkout = useCallback(() => {
+    clearTimer();
     setStarted(false);
     setPaused(false);
     setGlobalSeconds(0);
-    setTick(0);
-  };
+  }, [clearTimer]);
 
-  const togglePause = () => {
-    setPaused((p) => {
-      const next = !p;
-      if (next) {
-        if (intervalRef.current) clearInterval(intervalRef.current);
-      } else {
-        intervalRef.current = setInterval(() => {
-          setGlobalSeconds((prev) => prev + 1);
-          setTick((t) => t + 1);
-        }, 1000);
+  const togglePause = useCallback(() => {
+    setPaused((prevPaused) => {
+      const nextPaused = !prevPaused;
+
+      if (nextPaused) {
+        clearTimer();
+      } else if (started) {
+        runTimer();
       }
-      return next;
+
+      return nextPaused;
     });
-  };
+  }, [clearTimer, runTimer, started]);
 
   useEffect(() => {
-    getWorkout();
-    return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current);
-    };
-  }, []);
+    if (!fetchedOnMountRef.current) {
+      fetchedOnMountRef.current = true;
+      void refreshWorkout();
+    }
 
-  return (
-    <WorkoutContext.Provider
-      value={{
-        workout,
-        loading,
-        started,
-        startWorkout,
-        endWorkout,
-        tick,
-        togglePause,
-        paused,
-        globalSeconds,
-      }}
-    >
-      {children}
-    </WorkoutContext.Provider>
+    return clearTimer;
+  }, [clearTimer, refreshWorkout]);
+
+  const value = useMemo(
+    () => ({
+      workout,
+      loading,
+      started,
+      paused,
+      globalSeconds,
+      startWorkout,
+      endWorkout,
+      togglePause,
+      refreshWorkout,
+    }),
+    [
+      workout,
+      loading,
+      started,
+      paused,
+      globalSeconds,
+      startWorkout,
+      endWorkout,
+      togglePause,
+      refreshWorkout,
+    ]
   );
+
+  return <WorkoutContext.Provider value={value}>{children}</WorkoutContext.Provider>;
 };

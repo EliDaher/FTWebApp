@@ -111,7 +111,7 @@ export default function AddNutritionProgram() {
             <input
               type="text"
               name="title"
-              className="w-full px-4 py-2 rounded-md border border-gray-300 bg-gray-100/10 text-white focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-full px-4 py-2 rounded-md border border-gray-300 bg-gray-100/10 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
               value={program.title}
               onChange={handleChange}
               required
@@ -122,7 +122,7 @@ export default function AddNutritionProgram() {
             <label className="block mb-1 font-semibold">وصف البرنامج</label>
             <textarea
               name="description"
-              className="w-full px-4 py-2 rounded-md border border-gray-300 bg-gray-100/10 text-white focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-full px-4 py-2 rounded-md border border-gray-300 bg-gray-100/10 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
               value={program.description}
               onChange={handleChange}
               required
@@ -134,7 +134,7 @@ export default function AddNutritionProgram() {
             <input
               type="number"
               name="calories"
-              className="w-full px-4 py-2 rounded-md border border-gray-300 bg-gray-100/10 text-white focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-full px-4 py-2 rounded-md border border-gray-300 bg-gray-100/10 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
               value={program.calories}
               onChange={handleChange}
               required
@@ -151,7 +151,7 @@ export default function AddNutritionProgram() {
                   <label className="block mb-1 font-semibold">{`اسم الوجبة ${mealIndex + 1}`}</label>
                   <input
                     type="text"
-                    className="w-full px-4 py-2 rounded-md border border-gray-300 bg-white/10 text-white focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    className="w-full px-4 py-2 rounded-md border border-gray-300 bg-white/10 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
                     value={meal.name}
                     onChange={(e) => handleMealNameChange(mealIndex, e.target.value)}
                     required
@@ -172,7 +172,7 @@ export default function AddNutritionProgram() {
                     <label className="block mb-1 text-sm">نوع الطعام</label>
                     <input
                       type="text"
-                      className="w-36 px-3 py-2 rounded-md border border-gray-300 bg-white/10 text-white focus:outline-none focus:ring-2 focus:ring-blue-400"
+                      className="w-36 px-3 py-2 rounded-md border border-gray-300 bg-white/10 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
                       value={item.food}
                       onChange={(e) => handleItemChange(mealIndex, itemIndex, "food", e.target.value)}
                       required
@@ -182,7 +182,7 @@ export default function AddNutritionProgram() {
                     <label className="block mb-1 text-sm">الكمية</label>
                     <input
                       type="text"
-                      className="w-24 px-3 py-2 rounded-md border border-gray-300 bg-white/10 text-white focus:outline-none focus:ring-2 focus:ring-blue-400"
+                      className="w-24 px-3 py-2 rounded-md border border-gray-300 bg-white/10 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
                       value={item.quantity}
                       onChange={(e) => handleItemChange(mealIndex, itemIndex, "quantity", e.target.value)}
                       required
@@ -192,7 +192,7 @@ export default function AddNutritionProgram() {
                     <label className="block mb-1 text-sm">الوحدة</label>
                     <input
                       type="text"
-                      className="w-24 px-3 py-2 rounded-md border border-gray-300 bg-white/10 text-white focus:outline-none focus:ring-2 focus:ring-blue-400"
+                      className="w-24 px-3 py-2 rounded-md border border-gray-300 bg-white/10 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
                       value={item.unit}
                       onChange={(e) => handleItemChange(mealIndex, itemIndex, "unit", e.target.value)}
                       required
@@ -210,7 +210,7 @@ export default function AddNutritionProgram() {
 
               <button
                 type="button"
-                className="text-sm text-blue-300 hover:text-blue-500 mt-2"
+                className="text-sm text-yellow-300 hover:text-yellow-200 mt-2"
                 onClick={() => addItemToMeal(mealIndex)}
               >
                 + إضافة عنصر
@@ -221,14 +221,14 @@ export default function AddNutritionProgram() {
           <button
             type="button"
             onClick={addMeal}
-            className="w-full py-2 rounded-md bg-blue-100 text-blue-800 font-semibold hover:bg-blue-200 transition"
+            className="w-full py-2 rounded-md bg-yellow-200 text-black font-semibold hover:bg-yellow-300 transition"
           >
             + إضافة وجبة
           </button>
 
           <button
             type="submit"
-            className="w-full py-2 bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-md transition"
+            className="w-full py-2 bg-yellow-500 hover:bg-yellow-400 text-black font-bold rounded-md transition"
           >
             حفظ التعديلات
           </button>
@@ -238,3 +238,4 @@ export default function AddNutritionProgram() {
     </ScreenWrapper>
   );
 }
+

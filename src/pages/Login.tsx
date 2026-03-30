@@ -1,82 +1,127 @@
-import axios from 'axios';
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import ScreenWrapper from '../components/ScreenWrapper';
+import { useState, type FormEvent } from "react";
+import { useNavigate } from "react-router-dom";
+import ScreenWrapper from "../components/ScreenWrapper";
+import Input from "../components/UI/Input";
+import Button from "../components/UI/Button";
+import { useAuth } from "../context/AuthContext";
+import apiClient from "../lib/axios";
+import BrandLogo from "../components/BrandLogo";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 export default function Login() {
-  const navigate = useNavigate()
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const { login } = useAuth()
+  const navigate = useNavigate();
+  const { login } = useAuth();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setError("");
+
     try {
-        const response = await axios.post('https://ftserver-ym6z.onrender.com/login', {
-          username: username,
-          password: password
-        });
-    
-        console.log('✅ Success:', response.data);
-        login(response.data.userData)
-        navigate('/Home')
+      setIsSubmitting(true);
 
-      } catch (error: any) {
-      console.error('❌ Error:', error.response?.data || error.message);
-      alert('خطأ في اسم المستخدم او كلمة المرور');
+      const response = await apiClient.post("/login", {
+        username: username.trim(),
+        password,
+      });
+
+      login(response.data.userData);
+      navigate("/Home");
+    } catch (requestError: unknown) {
+      console.error("Login failed:", requestError);
+      setError("اسم المستخدم أو كلمة المرور غير صحيحة.");
+    } finally {
+      setIsSubmitting(false);
     }
-
   };
 
   return (
     <ScreenWrapper>
-    <div className="min-h-screen flex items-center justify-center px-5">
-      <div className="bg-white/10 backdrop-blur-md rounded-3xl shadow-2xl px-5 py-10  w-full max-w-md border border-white/20">
-        <h2 className="text-3xl font-bold text-white text-center mb-8 tracking-tight font-Orbitron">Welcome to FitnessTime</h2>
-        
-        <form onSubmit={handleSubmit} className="flex flex-col gap-6">
-          <div className="flex flex-col">
-            <label className="text-sm text-white mb-2 text-right mr-2">اسم المستخدم</label>
-            <input
-              type="text"
-              className="rounded-xl px-4 py-3 bg-white/20 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white focus:bg-white/30 transition"
-              placeholder=""
+      <div className="mx-auto grid min-h-[80vh] w-full max-w-5xl items-center gap-8 md:grid-cols-[1.2fr_1fr]">
+        <section dir="rtl" className="hidden md:block">
+          <BrandLogo className="mb-5" imageClassName="h-16 w-16" />
+          <h1 className="font-Orbitron text-5xl font-black leading-tight text-white">
+            تمرّن بذكاء.
+            <br />
+            واظب باستمرار.
+          </h1>
+          <p className="mt-4 max-w-md text-lg text-slate-200/80">
+            ادخل إلى التمارين والخطط ومتابعة التقدم من لوحة واحدة.
+          </p>
+        </section>
+
+        <section dir="rtl" className="glass-surface-strong p-6 md:p-8">
+          <h2 className="font-Orbitron text-3xl font-bold text-white">مرحبًا بعودتك</h2>
+          <p className="mt-1 text-sm text-slate-300/80">سجّل الدخول للمتابعة.</p>
+
+          <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+            <Input
+              name="username"
+              label="اسم المستخدم"
               value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              onChange={(event) => setUsername(event.target.value)}
+              placeholder="أدخل اسم المستخدم"
               required
             />
-          </div>
 
-          <div className="flex flex-col">
-            <label className="text-sm text-white mb-2 text-right mr-2">كلمة المرور</label>
-            <input
-              type="password"
-              className="rounded-xl px-4 py-3 bg-white/20 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white focus:bg-white/30 transition"
-              placeholder=""
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          </div>
+            <div className="w-full">
+              <label htmlFor="password" className="mb-2 mr-1 block text-sm font-semibold text-slate-100">
+                كلمة المرور
+              </label>
+              <div className="relative">
+                <input
+                  id="password"
+                  name="password"
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(event) => setPassword(event.target.value)}
+                  placeholder="أدخل كلمة المرور"
+                  required
+                  className="h-11 w-full rounded-xl border border-yellow-300/25 bg-black/35 px-3 pl-20 text-yellow-50 placeholder:text-yellow-100/60 backdrop-blur-sm transition hover:border-yellow-300/45"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  aria-label={showPassword ? "إخفاء كلمة المرور" : "إظهار كلمة المرور"}
+                  aria-pressed={showPassword}
+                  className="absolute left-2 top-1/2 -translate-y-1/2 rounded-lg border border-yellow-300/30 px-2 py-1 text-xs font-semibold text-yellow-100 transition hover:bg-yellow-300/15"
+                >
+                  {showPassword ?
+                    <FaEyeSlash /> 
+                    : <FaEye />
+                  }
+                </button>
+              </div>
+            </div>
 
-          <button
-            type="submit"
-            className="bg-white text-black font-semibold py-3 rounded-xl hover:bg-gray-200 transition mt-4"
-            onClick={()=>{
-                
-            }}
-          >
-            تسجيل الدخول
-          </button>
-        </form>
+            {error ? (
+              <p className="rounded-lg border border-rose-300/50 bg-rose-500/15 px-3 py-2 text-sm text-rose-100">
+                {error}
+              </p>
+            ) : null}
 
-        <p className="text-center text-sm text-white/60 mt-6">
-          لا تملك حساب ؟ <span onClick={()=>{navigate('/SignUP')}} className="underline cursor-pointer hover:text-white">اضغط لإنشاء حساب جديد</span>
-        </p>
+            <Button type="submit" loading={isSubmitting} className="w-full">
+              تسجيل الدخول
+            </Button>
+          </form>
+
+          <p className="mt-5 text-center text-sm text-slate-300/85">
+            مستخدم جديد؟{" "}
+            <button
+              type="button"
+              onClick={() => navigate("/SignUP")}
+              className="font-semibold text-yellow-300 underline decoration-yellow-300/70 underline-offset-4 hover:text-yellow-100"
+            >
+              إنشاء حساب
+            </button>
+          </p>
+        </section>
       </div>
-    </div>
     </ScreenWrapper>
   );
 }

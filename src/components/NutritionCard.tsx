@@ -15,10 +15,10 @@ const NutritionCard: React.FC<Props> = ({ program, id }) => {
   return (
     <div onClick={()=>{
             navigate(`/EditNutrition/${id}`)
-        }}  dir="rtl" className="bg-black/20 rounded-2xl shadow-md border border-blue-200 p-6 space-y-3">
+        }}  dir="rtl" className="bg-black/30 rounded-2xl shadow-md border border-yellow-300/40 p-6 space-y-3">
       <div className="flex justify-between">
         
-        <h2 className="text-xl font-bold text-blue-600">{program.title}</h2>
+        <h2 className="text-xl font-bold text-yellow-300">{program.title}</h2>
         <button
           onClick={async ()=>{
 
@@ -41,8 +41,8 @@ const NutritionCard: React.FC<Props> = ({ program, id }) => {
 
       <div className="space-y-2 mt-4">
         {program.meals.map((meal, index) => (
-          <div key={index} className="bg-blue-50/5 p-3 rounded-xl border border-blue-100">
-            <h3 className="font-semibold text-blue-600 mb-1">{meal.name}</h3>
+          <div key={index} className="bg-yellow-50/5 p-3 rounded-xl border border-yellow-300/30">
+            <h3 className="font-semibold text-yellow-300 mb-1">{meal.name}</h3>
             <ul className="list-disc list-inside text-sm text-gray-200">
               {meal.items.map((item, idx) => (
                 <li key={idx}>

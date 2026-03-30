@@ -1,19 +1,16 @@
-// components/ui/Input.tsx
+import type { ChangeEvent, InputHTMLAttributes } from "react";
 
-import React from "react";
-
-interface InputProps {
+interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, "onChange" | "value"> {
   label?: string;
-  type?: string;
   name: string;
   value: string | number;
-  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  placeholder?: string;
-  className?: string;
-  required?: boolean
+  onChange: (event: ChangeEvent<HTMLInputElement>) => void;
+  helperText?: string;
+  error?: string;
+  inputClassName?: string;
 }
 
-const Input: React.FC<InputProps> = ({
+export default function Input({
   label,
   type = "text",
   name,
@@ -21,27 +18,32 @@ const Input: React.FC<InputProps> = ({
   onChange,
   placeholder = "",
   className = "",
-  required
-}) => {
+  inputClassName = "",
+  helperText,
+  error,
+  ...props
+}: InputProps) {
   return (
-    <div dir="rtl" className={`mb-1 w-full ${className}`}>
-      {label && (
-        <label htmlFor={name} className="block font-medium mb-1 mr-2">
+    <div dir="rtl" className={`w-full ${className}`}>
+      {label ? (
+        <label htmlFor={name} className="mb-2 mr-1 block text-sm font-semibold text-slate-100">
           {label}
         </label>
-      )}
+      ) : null}
+
       <input
-        required={required}
         id={name}
         name={name}
         type={type}
         value={value}
         onChange={onChange}
         placeholder={placeholder}
-        className="w-full border border-white p-2 rounded text-white placeholder-white/70 bg-white/10 focus:outline-none focus:ring-2 focus:ring-white focus:bg-white/30 transition"
+        className={`h-11 w-full rounded-xl border px-3 text-yellow-50 placeholder:text-yellow-100/60 bg-black/35 backdrop-blur-sm ${error ? "border-rose-300/70" : "border-yellow-300/25 hover:border-yellow-300/45"} ${inputClassName}`}
+        {...props}
       />
+
+      {error ? <p className="mt-1 text-xs text-rose-300">{error}</p> : null}
+      {!error && helperText ? <p className="mt-1 text-xs text-slate-300/70">{helperText}</p> : null}
     </div>
   );
-};
-
-export default Input;
+}

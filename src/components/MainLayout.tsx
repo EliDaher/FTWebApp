@@ -5,7 +5,7 @@ export default function MainLayout() {
   return (
     <>
       <Navbar />
-      <main className="">
+      <main className="relative z-10">
         <Outlet />
       </main>
     </>

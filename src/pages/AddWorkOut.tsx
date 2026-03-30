@@ -30,7 +30,7 @@ export default function AddWorkOut() {
   const [exercises, setExercises] = useState<WorkOutExercise[]>([])
 
   const [category, setCategory] = useState('')
-  const [catSuggestions, setcatSuggestions] = useState([])
+  const [catSuggestions, setcatSuggestions] = useState<string[]>([])
 
   const [suggestions, setSuggestions] = useState(['اليوم 0']);
   const [selectedConditions, setSelectedConditions] = useState('اليوم 1');
@@ -295,7 +295,7 @@ export default function AddWorkOut() {
       {isOpen && <AddSetsForm setIsOpen={setIsOpen} />}
 
       <HeaderCard>
-        <h1 className="text-2xl font-bold my-1 text-center">إضافة برنامج تدريبي</h1>
+        <h1 className="text-2xl font-bold text-center">إضافة برنامج تدريبي</h1>
       </HeaderCard>
 
       <BodyCard>
@@ -461,7 +461,7 @@ export default function AddWorkOut() {
             {isNewSet[exIdx] && exercises[exIdx].sets.length != 0  ? <button
               type="button"
               onClick={() => addSetToExercise(exIdx)}
-              className="text-sm mt-2 bg-blue-600 px-3 py-1 rounded-lg hover:bg-blue-700"
+              className="text-sm mt-2 bg-yellow-500 text-black px-3 py-1 rounded-lg hover:bg-yellow-400"
             >
               + أضف Set
             </button> : <></>}
@@ -488,3 +488,4 @@ export default function AddWorkOut() {
     </ScreenWrapper>
   )
 }
+

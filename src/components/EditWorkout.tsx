@@ -225,7 +225,7 @@ export default function AddWorkOut() {
           <button
             type="button"
             onClick={() => addSetToExercise(exIdx)}
-            className="text-sm mt-2 bg-blue-600 px-3 py-1 rounded-lg hover:bg-blue-700"
+            className="text-sm mt-2 bg-yellow-500 text-black px-3 py-1 rounded-lg hover:bg-yellow-400"
           >
             + أضف Set
           </button>
@@ -248,3 +248,4 @@ export default function AddWorkOut() {
     </div>
   )
 }
+

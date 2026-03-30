@@ -1,73 +1,81 @@
-import { motion } from "framer-motion";
-import { useMemo } from "react";
-import ClickSpark from "./ReactPits/ClickSpark";
+import { motion, useReducedMotion } from "framer-motion";
+import { useMemo, type ReactNode } from "react";
 
-export default function ScreenWrapper({ title, children }: any) {
+type ScreenWrapperProps = {
+  title?: string;
+  children: ReactNode;
+  className?: string;
+};
+
+export default function ScreenWrapper({ title, children, className = "" }: ScreenWrapperProps) {
   return (
-    <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-black via-gray-950 to-gray-900 p-4 md:p-8">
-      {/* فقاعات خلفية متحركة */}
+    <div className={`relative min-h-screen overflow-hidden px-4 pb-10 pt-24 md:px-6 lg:px-8 ${className}`}>
       <BackgroundBubbles />
 
-      {/* المحتوى فوق الخلفية */}
-      <div className="relative z-10">
-        {title && (
-          <h2 className="text-3xl md:text-4xl font-extrabold text-white mb-6 font-Orbitron text-center">
+      <div className="page-section relative z-10 fade-in-up text-white">
+        {title ? (
+          <h2 className="mb-6 text-center font-Orbitron text-3xl font-black tracking-tight md:text-4xl">
             {title}
           </h2>
-        )}
-        <ClickSpark
-          sparkColor='#fff'
-          sparkSize={10}
-          sparkRadius={15}
-          sparkCount={8}
-          duration={400}
-        >
-          <div className="animate-fade-in px-1 pt-6 text-white">
-            {children}
-          </div>
-        </ClickSpark>
+        ) : null}
+
+        <div className="space-y-4">{children}</div>
       </div>
     </div>
   );
 }
 
 function BackgroundBubbles() {
-  const bubbles = useMemo(() => {
-    return Array.from({ length: 25 }).map(() => ({
-      left: Math.random() * 100,
-      top: Math.random() * 100,
-      size: 16 + Math.random() * 24, // حجم متغير
-      color: Math.random() > 0.5 ? "bg-purple-500/50" : "bg-blue-500/40",
-      delay: Math.random() * 8,
-      duration: 10 + Math.random() * 10,
-      scale: 4.8 + Math.random() * 5.6,
-    }));
-  }, []);
+  const shouldReduceMotion = useReducedMotion();
+
+  const bubbles = useMemo(
+    () =>
+      Array.from({ length: 10 }).map((_, index) => ({
+        id: index,
+        left: Math.random() * 100,
+        top: Math.random() * 100,
+        size: 120 + Math.random() * 240,
+        opacity: 0.12 + Math.random() * 0.12,
+        duration: 10 + Math.random() * 8,
+        delay: Math.random() * 1.8,
+      })),
+    []
+  );
 
   return (
-    <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-      {bubbles.map((bubble, i) => (
+    <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(250,204,21,0.14),transparent_55%),radial-gradient(circle_at_bottom_right,rgba(245,158,11,0.14),transparent_45%)]" />
+
+      {bubbles.map((bubble) => (
         <motion.span
-          key={i}
-          className={`absolute rounded-full ${bubble.color} blur-sm`}
+          key={bubble.id}
+          className="absolute rounded-full bg-yellow-300/25 blur-3xl"
           style={{
-            width: `${bubble.size}px`,
-            height: `${bubble.size}px`,
+            width: bubble.size,
+            height: bubble.size,
             left: `${bubble.left}%`,
             top: `${bubble.top}%`,
+            opacity: bubble.opacity,
           }}
-          animate={{
-            y: [0, -20, 0, 20, 0],
-            x: [0, 10, 0, -10, 0],
-            scale: [2, bubble.scale, 1.5],
-          }}
-          transition={{
-            repeat: Infinity,
-            repeatType: "loop",
-            duration: bubble.duration,
-            ease: "easeInOut",
-            delay: bubble.delay,
-          }}
+          animate={
+            shouldReduceMotion
+              ? undefined
+              : {
+                  y: [0, -12, 0, 12, 0],
+                  x: [0, 8, 0, -8, 0],
+                }
+          }
+          transition={
+            shouldReduceMotion
+              ? undefined
+              : {
+                  repeat: Infinity,
+                  repeatType: "loop",
+                  duration: bubble.duration,
+                  ease: "easeInOut",
+                  delay: bubble.delay,
+                }
+          }
         />
       ))}
     </div>

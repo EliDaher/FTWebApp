@@ -1,41 +1,53 @@
 import { useEffect } from "react";
 import axios from "axios";
 
-export default function CategoryInput({ category, setCategory, type, suggestions, setSuggestions, className }: any) {
+type CategoryInputProps = {
+  category: string;
+  setCategory: (value: string) => void;
+  type: string;
+  suggestions: string[];
+  setSuggestions: (items: string[]) => void;
+  className?: string;
+};
 
-    // جلب الفئات الموجودة عند التحميل
-    useEffect(() => {
-        const fetchCategories = async () => {
-          try {
-            const res = await axios.get(`https://ftserver-ym6z.onrender.com/${type}Categories`); // غيّر المسار حسب API عندك
-            setSuggestions(res.data); // نتوقع مصفوفة مثل ["strength", "cardio"]
-          } catch (err) {
-            console.error("فشل في جلب الفئات:", err);
-          }
-        };
+export default function CategoryInput({
+  category,
+  setCategory,
+  type,
+  suggestions,
+  setSuggestions,
+  className = "",
+}: CategoryInputProps) {
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await axios.get<string[]>(`https://ftserver-ym6z.onrender.com/${type}Categories`);
+        setSuggestions(res.data);
+      } catch (err) {
+        console.error("فشل تحميل التصنيفات:", err);
+      }
+    };
 
-        fetchCategories();
-    }, []);
+    void fetchCategories();
+  }, [setSuggestions, type]);
 
-    
+  return (
+    <div className={`w-full ${className}`}>
+      <label className="mb-2 mr-1 block text-sm font-semibold text-slate-100">التصنيف</label>
+      <input
+        type="text"
+        className="h-11 w-full rounded-xl border border-white/20 bg-white/10 px-3 text-slate-100 placeholder:text-slate-300/70 hover:border-white/35"
+        placeholder="قوة، كارديو، ..."
+        value={category}
+        onChange={(event) => setCategory(event.target.value)}
+        list="category-suggestions"
+      />
 
-    return (
-        <>
-          <label className="text-white mb-2 ml-3">فئة التمرين</label>
-          <input
-            type="text"
-            className={`rounded px-4 py-3 bg-blue-200/20 border text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white focus:bg-white/30 transition ${className}`}
-            placeholder="Strength, Cardio, ..."
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            list="category-suggestions"
-          />
-
-          <datalist id="category-suggestions">
-            {suggestions.map((sug: any) => (
-              <option key={sug} value={sug} />
-            ))}
-          </datalist>
-        </>
-    );
+      <datalist id="category-suggestions">
+        {suggestions.map((suggestion) => (
+          <option key={suggestion} value={suggestion} />
+        ))}
+      </datalist>
+    </div>
+  );
 }

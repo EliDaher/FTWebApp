@@ -112,7 +112,7 @@ export default function Exercise() {
         <div className="flex flex-col">
           <label className="text-white mb-2 ml-3">العضلة المستهدفة</label>
           <select
-            className="rounded px-4 py-3 bg-blue-200/20 border text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white focus:bg-white/30 transition"
+            className="rounded px-4 py-3 bg-yellow-300/15 border border-yellow-300/25 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:bg-white/20 transition"
             value={bodyPart}
             onChange={(e) => setBodyPart(e.target.value)}
           >
@@ -129,7 +129,7 @@ export default function Exercise() {
         <div className="flex flex-col">
           <label className=" text-white mb-2 ml-3">وصف التمرين</label>
           <textarea
-            className="rounded px-4 py-3 bg-blue-200/20 border text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white focus:bg-white/30 transition"
+            className="rounded px-4 py-3 bg-yellow-300/15 border border-yellow-300/25 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:bg-white/20 transition"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           />
@@ -138,7 +138,7 @@ export default function Exercise() {
         <div className="flex flex-col">
           <label className=" text-white mb-2 ml-3">الاخطاء الشائعة</label>
           <textarea
-            className="rounded px-4 py-3 bg-blue-200/20 border text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white focus:bg-white/30 transition"
+            className="rounded px-4 py-3 bg-yellow-300/15 border border-yellow-300/25 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:bg-white/20 transition"
             value={commonMistakes}
             onChange={(e) => setCommonMistakes(e.target.value)}
           />
@@ -160,7 +160,7 @@ export default function Exercise() {
 
         <button
           type="submit"
-          className="bg-blue-600 text-white font-semibold py-3 rounded-xl hover:bg-blue-500 transition"
+          className="bg-yellow-500 text-black font-semibold py-3 rounded-xl hover:bg-yellow-400 transition"
         >
           Save
         </button>
